@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="elevation">0dp</item>
+    </style>
+
     <!-- 启动页填充屏幕样式 -->
     <style name="MainTheme" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>

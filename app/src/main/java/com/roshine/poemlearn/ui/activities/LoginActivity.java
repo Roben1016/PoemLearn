@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.MvpBaseActivity;
@@ -36,6 +37,8 @@ public class LoginActivity extends MvpBaseActivity<LoginContract.ILoginView, Log
     Button btnLogin;
     @BindView(R.id.btn_regist)
     Button btnRegist;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
     @Override
     public LoginPresenter getPresenter() {
@@ -49,7 +52,7 @@ public class LoginActivity extends MvpBaseActivity<LoginContract.ILoginView, Log
 
     @Override
     protected void initViewData(Bundle savedInstanceState) {
-
+        tvTitle.setText(getResources().getString(R.string.login));
     }
 
     @Nullable
@@ -62,14 +65,15 @@ public class LoginActivity extends MvpBaseActivity<LoginContract.ILoginView, Log
     public void loadFail(String message) {
 
     }
+
     @OnClick(R.id.btn_login)
-    void loginClick(){
+    void loginClick() {
         startActivity(MainActivity.class);
         finish();
     }
+
     @OnClick(R.id.btn_regist)
-    void registClick(){
+    void registClick() {
         startActivity(RegistActivity.class);
     }
-
 }

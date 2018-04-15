@@ -1,5 +1,8 @@
 package com.roshine.poemlearn.utils;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -537,6 +540,20 @@ public class AppStringUtils {
         }
         float result = count / chLength;
         if (result > 0.4) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static boolean isChinesePunctuation(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS
+                || ub == Character.UnicodeBlock.VERTICAL_FORMS) {
             return true;
         } else {
             return false;

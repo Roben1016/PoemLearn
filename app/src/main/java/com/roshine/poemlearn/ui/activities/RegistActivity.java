@@ -3,9 +3,11 @@ package com.roshine.poemlearn.ui.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.MvpBaseActivity;
@@ -42,6 +44,8 @@ public class RegistActivity extends MvpBaseActivity<RegistContract.IRegistView, 
     TextInputLayout tilPasswordSecond;
     @BindView(R.id.btn_regist)
     Button btnRegist;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
 
     @Override
     public RegistPresenter getPresenter() {
@@ -55,7 +59,8 @@ public class RegistActivity extends MvpBaseActivity<RegistContract.IRegistView, 
 
     @Override
     protected void initViewData(Bundle savedInstanceState) {
-
+        ivBack.setVisibility(View.VISIBLE);
+        tvTitle.setText(getResources().getString(R.string.regist));
     }
 
     @Nullable
@@ -68,9 +73,16 @@ public class RegistActivity extends MvpBaseActivity<RegistContract.IRegistView, 
     public void loadFail(String message) {
 
     }
+
     @OnClick(R.id.iv_back)
-    void backClick(){
+    void backClick() {
         finish();
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

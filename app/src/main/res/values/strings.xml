@@ -13,4 +13,9 @@
     <string name="junior">初中</string>
     <string name="high">高中</string>
     <string name="password_second">确认密码</string>
+    <string name="song_blank_text">宋词填空</string>
+    <string name="tang_blank_text">唐诗填空</string>
+    <string name="glorious_recyclerview_loading_more">正在加载更多</string>
+    <string name="load_failed_bottom">加载失败,点击重新加载</string>
+    <string name="no_more_text">没有更多信息</string>
 </resources>

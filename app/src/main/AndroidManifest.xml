@@ -28,6 +28,9 @@
         <activity android:name=".ui.activities.RegistActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
+        <activity android:name=".ui.activities.BlankActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
     </application>
 
 </manifest>

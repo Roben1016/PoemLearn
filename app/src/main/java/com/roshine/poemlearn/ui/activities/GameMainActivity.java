@@ -2,6 +2,7 @@ package com.roshine.poemlearn.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -51,13 +52,16 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
     @Override
     protected void initViewData(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        if (bundle != null) {
-            poemType = bundle.getInt("poemType");
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                poemType = bundle.getInt("poemType");
+            }
         }
         setImages();
         rbPrimary.setChecked(true);
         rgGames.setOnCheckedChangeListener(this);
+        ivBack.setVisibility(View.VISIBLE);
     }
 
     private void setImages() {
@@ -79,7 +83,9 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
 
     @OnClick(R.id.iv_blank)
     void blankClick() {
-
+        Bundle bundle = new Bundle();
+        bundle.putInt("poemType",poemType);
+        startActivity(BlankActivity.class,bundle);
     }
 
     @OnClick(R.id.iv_recite)
