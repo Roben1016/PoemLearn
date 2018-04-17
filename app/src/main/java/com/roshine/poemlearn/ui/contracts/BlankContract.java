@@ -16,6 +16,6 @@ public interface BlankContract {
 
     }
     interface IBlankPresenter extends IBaseView<Object>{
-        void getPoemData();
+        void getPoemData(String poemType,String schoolType);
     }
 }

@@ -3,6 +3,9 @@
     package="com.roshine.poemlearn">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -29,6 +32,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
         <activity android:name=".ui.activities.BlankActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
+        <activity android:name=".ui.activities.ConfirmGameActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
+        <activity android:name=".ui.activities.ReciteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
     </application>

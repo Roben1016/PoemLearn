@@ -1,5 +1,7 @@
 package com.roshine.poemlearn.beans;
 
+import java.io.Serializable;
+
 /**
  * @author Roshine
  * @date 2018/4/15 11:04
@@ -9,12 +11,12 @@ package com.roshine.poemlearn.beans;
  * @phone 136****1535
  * @desc
  */
-public class PoemBean {
+public class PoemBean implements Serializable{
     private String poemTitle;
     private String poemYear;
     private String poemAuthor;
     private String correctPoem;
-    private String disturbPoem;
+//    private String disturbPoem;
 
     public String getPoemTitle() {
         return poemTitle;
@@ -48,12 +50,12 @@ public class PoemBean {
         this.correctPoem = correctPoem;
     }
 
-    public String getDisturbPoem() {
-        return disturbPoem;
-    }
-
-    public void setDisturbPoem(String disturbPoem) {
-        this.disturbPoem = disturbPoem;
-    }
+//    public String getDisturbPoem() {
+//        return disturbPoem;
+//    }
+//
+//    public void setDisturbPoem(String disturbPoem) {
+//        this.disturbPoem = disturbPoem;
+//    }
 
 }

@@ -8,10 +8,10 @@
     android:background="@drawable/blank_item_bg">
     <TextView
         android:id="@+id/tv_item_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:padding="5dp"
         android:textColor="@color/white"
-        android:textSize="16sp"/>
-
+        android:textSize="16sp"
+        android:gravity="center"/>
 </LinearLayout>

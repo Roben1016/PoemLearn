@@ -3,30 +3,22 @@ package com.roshine.poemlearn.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.MvpBaseActivity;
 import com.roshine.poemlearn.beans.PoemBean;
-import com.roshine.poemlearn.beans.PoemWordBean;
+import com.roshine.poemlearn.ui.adapters.BlankFragmentAdapter;
 import com.roshine.poemlearn.ui.contracts.BlankContract;
+import com.roshine.poemlearn.ui.fragments.BlankFragement;
 import com.roshine.poemlearn.ui.presenters.BlankPresenter;
-import com.roshine.poemlearn.utils.AppStringUtils;
-import com.roshine.poemlearn.utils.LogUtil;
-import com.roshine.poemlearn.widgets.recyclerview.base.SimpleRecyclertViewAdater;
-import com.roshine.poemlearn.widgets.recyclerview.base.ViewHolder;
-import com.roshine.poemlearn.widgets.recyclerview.decoration.SpacesItemDecoration;
-import com.roshine.poemlearn.widgets.recyclerview.interfaces.OnItemClickListener;
-import com.roshine.poemlearn.widgets.recyclerview.interfaces.OnItemLongClickListener;
+import com.roshine.poemlearn.utils.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,30 +33,23 @@ import butterknife.OnClick;
  * @phone 136****1535
  * @desc
  */
-public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, BlankPresenter> implements BlankContract.IBlankView {
+public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, BlankPresenter> implements BlankContract.IBlankView, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.tv_poem_title)
-    TextView tvPoemTitle;
-    @BindView(R.id.rv_top)
-    RecyclerView rvTop;
-    @BindView(R.id.rv_bottom)
-    RecyclerView rvBottom;
-    @BindView(R.id.tv_poem_author)
-    TextView tvPoemAuthor;
-    @BindView(R.id.tv_poem_year)
-    TextView tvPoemYear;
+    @BindView(R.id.main_view_pager)
+    ViewPager mViewPager;
+    @BindView(R.id.tv_last_poem)
+    TextView tvLastPoem;
+    @BindView(R.id.tv_next_poem)
+    TextView tvNextPoem;
+
     private int poemType;
-    private SimpleRecyclertViewAdater<PoemWordBean> mTopAdapter;
-    private List<PoemWordBean> topData = new ArrayList<>();
-    private List<PoemWordBean> bottomData = new ArrayList<>();
-    private List<Integer> blankIndex = new LinkedList<>();
-    private PoemBean mPoemBean;
-    private SimpleRecyclertViewAdater<PoemWordBean> mBottomAdapter;
-    private int currentLongClickPosition = -1;//当前长按的角标
+    private List<Fragment> fragmentList = new ArrayList<>();
+    private BlankFragmentAdapter fragmentAdapter;
+    private int schoolType;
 
     @Override
     public BlankPresenter getPresenter() {
@@ -83,6 +68,7 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 poemType = extras.getInt("poemType");
+                schoolType = extras.getInt("schoolType");
             }
         }
         ivBack.setVisibility(View.VISIBLE);
@@ -92,213 +78,173 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
             tvTitle.setText(getResources().getString(R.string.tang_blank_text));
         }
         initData();
-        initTopRecycleView();
-        initBottomRecycleView();
     }
 
     private void initData() {
-        mPoemBean = new PoemBean();
-        mPoemBean.setCorrectPoem("床前明月光，疑是地上霜。举头望明月，低头思故乡。");
-        mPoemBean.setDisturbPoem("疑是地上，霜床前明。月光低头，思故乡举头望明月。");
-        mPoemBean.setPoemAuthor("李白");
-        mPoemBean.setPoemTitle("静夜思");
-        mPoemBean.setPoemYear("唐");
-        String correctPoem = mPoemBean.getCorrectPoem();
-        String[] split = correctPoem.split("");
-        for (int i = 0; i < split.length; i++) {
-            if (0 != i) {
-                String word = split[i];
-                PoemWordBean poemWordBean = new PoemWordBean();
-                poemWordBean.setBottomPosition(-1);
-                boolean chinesePunctuation = AppStringUtils.isChinesePunctuation(word.charAt(0));
-                if (chinesePunctuation) {
-                    poemWordBean.setWord(word);
-                } else {
-                    poemWordBean.setWord("");
-                    blankIndex.add(i - 1);
-                }
-                poemWordBean.setPunctuation(chinesePunctuation);
-                topData.add(poemWordBean);
-            }
+        if(schoolType == 1){//初中
+            initJuniorPoem();
+        }else if(schoolType == 2){
+            initHighPoem();
+        }else{
+            initPrimaryPoem();
         }
 
-        String disturbPoem = mPoemBean.getDisturbPoem();
-        String[] split2 = disturbPoem.split("");
-        for (int i = 0; i < split2.length; i++) {
-            if (0 != i) {
-                String word = split2[i];
-                boolean chinesePunctuation = AppStringUtils.isChinesePunctuation(word.charAt(0));
-                if (!chinesePunctuation) {
-                    PoemWordBean poemWordBean = new PoemWordBean();
-                    poemWordBean.setBottomPosition(-1);
-                    poemWordBean.setWord(word);
-                    bottomData.add(poemWordBean);
-                    LogUtil.show(i + ":" + word);
-                }
-            }
+        fragmentAdapter = new BlankFragmentAdapter(getSupportFragmentManager(), fragmentList);
+        mViewPager.setAdapter(fragmentAdapter);
+        mViewPager.setOffscreenPageLimit(fragmentList.size());
+        mViewPager.addOnPageChangeListener(this);
+
+    }
+
+    private void initHighPoem() {
+        PoemBean poemBean = new PoemBean();
+        poemBean.setCorrectPoem("折戟沉沙铁未销，自将磨洗认前朝。东风不与周郎便，铜雀春深锁二乔。");
+        poemBean.setPoemAuthor("杜牧");
+        poemBean.setPoemTitle("赤壁");
+        poemBean.setPoemYear("唐");
+        Fragment fragment = BlankFragement.newInstance(0, poemType, poemBean);
+        fragmentList.add(fragment);
+
+        PoemBean poemBean1 = new PoemBean();
+        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
+        poemBean1.setPoemAuthor("柳宗元");
+        poemBean1.setPoemTitle("江雪");
+        poemBean1.setPoemYear("唐");
+        Fragment fragment1 = BlankFragement.newInstance(1, poemType, poemBean1);
+        fragmentList.add(fragment1);
+
+        PoemBean poemBean2 = new PoemBean();
+        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
+        poemBean2.setPoemAuthor("孟浩然");
+        poemBean2.setPoemTitle("春晓");
+        poemBean2.setPoemYear("唐");
+        Fragment fragment2 = BlankFragement.newInstance(2, poemType, poemBean2);
+        fragmentList.add(fragment2);
+
+        PoemBean poemBean3 = new PoemBean();
+        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
+        poemBean3.setPoemAuthor("王维");
+        poemBean3.setPoemTitle("鹿柴");
+        poemBean3.setPoemYear("唐");
+        Fragment fragment3 = BlankFragement.newInstance(3, poemType, poemBean3);
+        fragmentList.add(fragment3);
+
+        PoemBean poemBean4 = new PoemBean();
+        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
+        poemBean4.setPoemAuthor("王之涣");
+        poemBean4.setPoemTitle("登鹳雀楼");
+        poemBean4.setPoemYear("唐");
+        Fragment fragment4 = BlankFragement.newInstance(4, poemType, poemBean4);
+        fragmentList.add(fragment4);
+    }
+
+    private void initJuniorPoem() {
+        PoemBean poemBean = new PoemBean();
+        poemBean.setCorrectPoem("折戟沉沙铁未销，自将磨洗认前朝。东风不与周郎便，铜雀春深锁二乔。");
+        poemBean.setPoemAuthor("杜牧");
+        poemBean.setPoemTitle("赤壁");
+        poemBean.setPoemYear("唐");
+        Fragment fragment = BlankFragement.newInstance(0, poemType, poemBean);
+        fragmentList.add(fragment);
+
+        PoemBean poemBean1 = new PoemBean();
+        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
+        poemBean1.setPoemAuthor("柳宗元");
+        poemBean1.setPoemTitle("江雪");
+        poemBean1.setPoemYear("唐");
+        Fragment fragment1 = BlankFragement.newInstance(1, poemType, poemBean1);
+        fragmentList.add(fragment1);
+
+        PoemBean poemBean2 = new PoemBean();
+        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
+        poemBean2.setPoemAuthor("孟浩然");
+        poemBean2.setPoemTitle("春晓");
+        poemBean2.setPoemYear("唐");
+        Fragment fragment2 = BlankFragement.newInstance(2, poemType, poemBean2);
+        fragmentList.add(fragment2);
+
+        PoemBean poemBean3 = new PoemBean();
+        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
+        poemBean3.setPoemAuthor("王维");
+        poemBean3.setPoemTitle("鹿柴");
+        poemBean3.setPoemYear("唐");
+        Fragment fragment3 = BlankFragement.newInstance(3, poemType, poemBean3);
+        fragmentList.add(fragment3);
+
+        PoemBean poemBean4 = new PoemBean();
+        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
+        poemBean4.setPoemAuthor("王之涣");
+        poemBean4.setPoemTitle("登鹳雀楼");
+        poemBean4.setPoemYear("唐");
+        Fragment fragment4 = BlankFragement.newInstance(4, poemType, poemBean4);
+        fragmentList.add(fragment4);
+    }
+
+    private void initPrimaryPoem() {
+        PoemBean poemBean = new PoemBean();
+        poemBean.setCorrectPoem("床前明月光，疑是地上霜。举头望明月，低头思故乡。");
+        poemBean.setPoemAuthor("李白");
+        poemBean.setPoemTitle("静夜思");
+        poemBean.setPoemYear("唐");
+        Fragment fragment = BlankFragement.newInstance(0, poemType, poemBean);
+        fragmentList.add(fragment);
+
+        PoemBean poemBean1 = new PoemBean();
+        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
+        poemBean1.setPoemAuthor("柳宗元");
+        poemBean1.setPoemTitle("江雪");
+        poemBean1.setPoemYear("唐");
+        Fragment fragment1 = BlankFragement.newInstance(1, poemType, poemBean1);
+        fragmentList.add(fragment1);
+
+        PoemBean poemBean2 = new PoemBean();
+        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
+        poemBean2.setPoemAuthor("孟浩然");
+        poemBean2.setPoemTitle("春晓");
+        poemBean2.setPoemYear("唐");
+        Fragment fragment2 = BlankFragement.newInstance(2, poemType, poemBean2);
+        fragmentList.add(fragment2);
+
+        PoemBean poemBean3 = new PoemBean();
+        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
+        poemBean3.setPoemAuthor("王维");
+        poemBean3.setPoemTitle("鹿柴");
+        poemBean3.setPoemYear("唐");
+        Fragment fragment3 = BlankFragement.newInstance(3, poemType, poemBean3);
+        fragmentList.add(fragment3);
+
+        PoemBean poemBean4 = new PoemBean();
+        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
+        poemBean4.setPoemAuthor("王之涣");
+        poemBean4.setPoemTitle("登鹳雀楼");
+        poemBean4.setPoemYear("唐");
+        Fragment fragment4 = BlankFragement.newInstance(4, poemType, poemBean4);
+        fragmentList.add(fragment4);
+    }
+
+    @OnClick(R.id.iv_back)
+    void backClick() {
+        finish();
+    }
+    @OnClick(R.id.tv_last_poem)
+    void lastPoemClick(){
+        int currentItem = mViewPager.getCurrentItem();
+        toast(currentItem + "=点击上一页="+fragmentList.size());
+        if(currentItem == 0){
+            return;
         }
-        LogUtil.show("topSize:" + topData.size() + "==bottomSize:" + bottomData.size());
-        tvPoemTitle.setText(mPoemBean.getPoemTitle());
-        tvPoemAuthor.setText(mPoemBean.getPoemAuthor());
-        tvPoemYear.setText(mPoemBean.getPoemYear());
+        mViewPager.setCurrentItem(currentItem -1);
     }
-
-    private void initTopRecycleView() {
-        SpacesItemDecoration universalDecoration = new SpacesItemDecoration(5);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 6, GridLayoutManager.VERTICAL, false);
-        rvTop.setLayoutManager(gridLayoutManager);
-        mTopAdapter = new SimpleRecyclertViewAdater<PoemWordBean>(this, topData, R.layout.item_top_blank) {
-            @Override
-            protected void onBindViewHolder(ViewHolder holder, int itemType, PoemWordBean itemBean, int position) {
-                TextView tvItem = holder.getView(R.id.tv_item_text);
-                LinearLayout llContainer = holder.getView(R.id.ll_top_container);
-                if (itemBean != null) {
-                    String word = itemBean.getWord();
-                    tvItem.setText(word == null ? "" : word);
-                    if (!AppStringUtils.isEmpty(word)) {
-                        llContainer.setBackground(getResources().getDrawable(R.drawable.blank_item_bottom_bg));
-                    } else {
-                        llContainer.setBackground(getResources().getDrawable(R.drawable.blank_item_bg));
-                    }
-                }
-            }
-        };
-        rvTop.addItemDecoration(universalDecoration);
-        rvTop.setAdapter(mTopAdapter);
-        mTopAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void OnItemClick(int position, ViewHolder holder) {
-                PoemWordBean topPoemWordBean = topData.get(position);
-                if (topPoemWordBean != null) {
-                    String word = topPoemWordBean.getWord();
-                    boolean punctuation = topPoemWordBean.isPunctuation();
-                    int bottomPosition = topPoemWordBean.getBottomPosition();
-                    if (currentLongClickPosition != -1) {
-                        if(!punctuation){
-                            if (AppStringUtils.isEmpty(word)) {
-                                blankIndex.remove(Integer.valueOf(position));
-                            } else {
-                                PoemWordBean poemWordBean = bottomData.get(bottomPosition);
-                                poemWordBean.setWord(word);
-                                reflashBottomAdapter(bottomPosition);
-                            }
-                            PoemWordBean poemWordBean = bottomData.get(currentLongClickPosition);
-//                            PoemWordBean topBean = topData.get(position);
-                            String word1 = poemWordBean.getWord();
-                            poemWordBean.setLongClick(false);
-                            poemWordBean.setWord("");
-                            reflashBottomAdapter(currentLongClickPosition);
-
-                            topPoemWordBean.setWord(word1);
-                            topPoemWordBean.setBottomPosition(currentLongClickPosition);
-                            reflashTopAdapter(position);
-                            currentLongClickPosition = -1;
-                        }
-                    } else {
-                        if (!AppStringUtils.isEmpty(word)) {
-                            if (!punctuation) {
-                                if (bottomPosition != -1 && bottomPosition < bottomData.size()) {
-                                    PoemWordBean bottomPoemBean = bottomData.get(bottomPosition);
-                                    bottomPoemBean.setWord(word);
-                                    reflashBottomAdapter(bottomPosition);
-
-                                    topPoemWordBean.setWord("");
-                                    reflashTopAdapter(position);
-                                    blankIndex.add(position);
-                                    Collections.sort(blankIndex);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    private void initBottomRecycleView() {
-        SpacesItemDecoration universalDecoration = new SpacesItemDecoration(5);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 6, GridLayoutManager.VERTICAL, false);
-        rvBottom.setLayoutManager(gridLayoutManager);
-        mBottomAdapter = new SimpleRecyclertViewAdater<PoemWordBean>(this, bottomData, R.layout.item_bottom_blank) {
-            @Override
-            protected void onBindViewHolder(ViewHolder holder, int itemType, PoemWordBean itemBean, int position) {
-                TextView tvItem = holder.getView(R.id.tv_item_text);
-                LinearLayout llContainer = holder.getView(R.id.ll_bottom_container);
-                if (itemBean != null) {
-                    String word = itemBean.getWord();
-                    boolean longClick = itemBean.isLongClick();
-                    tvItem.setText(word == null ? "" : word);
-                    if (!AppStringUtils.isEmpty(word)) {
-                        if (longClick) {
-                            llContainer.setBackground(getResources().getDrawable(R.drawable.blank_item_bottom_long_bg));
-                        } else {
-                            llContainer.setBackground(getResources().getDrawable(R.drawable.blank_item_bottom_bg));
-                        }
-                    } else {
-                        llContainer.setBackground(getResources().getDrawable(R.drawable.blank_item_bg));
-                    }
-                }
-            }
-        };
-        rvBottom.addItemDecoration(universalDecoration);
-        rvBottom.setAdapter(mBottomAdapter);
-        mBottomAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void OnItemClick(int position, ViewHolder holder) {
-                toast("单击："+position);
-                if (currentLongClickPosition != -1) {
-                    PoemWordBean poemWordBean = bottomData.get(currentLongClickPosition);
-                    poemWordBean.setLongClick(false);
-                    reflashBottomAdapter(currentLongClickPosition);
-                    currentLongClickPosition = -1;
-                } else {
-                    PoemWordBean bottomPoemWordBean = bottomData.get(position);
-                    if (!AppStringUtils.isEmpty(bottomPoemWordBean.getWord())) {
-                        PoemWordBean topPoemWordBean = topData.get(blankIndex.get(0));
-                        topPoemWordBean.setWord(bottomPoemWordBean.getWord());
-                        topPoemWordBean.setBottomPosition(position);
-                        bottomPoemWordBean.setWord("");
-                        reflashTopAdapter(blankIndex.get(0));
-                        reflashBottomAdapter(position);
-                        blankIndex.remove(0);
-                    }
-                }
-            }
-        });
-        mBottomAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(int position, ViewHolder holder) {
-                if (currentLongClickPosition == -1) {
-                    PoemWordBean bottomPoemBean = bottomData.get(position);
-                    bottomPoemBean.setLongClick(true);
-                    reflashBottomAdapter(position);
-                    currentLongClickPosition = position;
-                } else {
-                    PoemWordBean poemWordBean = bottomData.get(currentLongClickPosition);
-                    poemWordBean.setLongClick(false);
-                    reflashBottomAdapter(currentLongClickPosition);
-
-                    PoemWordBean bottomPoemBean = bottomData.get(position);
-                    bottomPoemBean.setLongClick(true);
-                    reflashBottomAdapter(position);
-                    currentLongClickPosition = position;
-                }
-                return false;
-            }
-        });
-    }
-
-    private void reflashBottomAdapter(int position) {
-        if (mBottomAdapter != null) {
-            mBottomAdapter.notifyItemChanged(position);
+    @OnClick(R.id.tv_next_poem)
+    void nextPoemClick(){
+        int currentItem = mViewPager.getCurrentItem();
+        toast(currentItem + "=点击下一页="+fragmentList.size());
+        if(currentItem == fragmentList.size() -1){
+            return;
         }
+        mViewPager.setCurrentItem(currentItem + 1);
     }
 
-    private void reflashTopAdapter(int position) {
-        if (mTopAdapter != null) {
-            mTopAdapter.notifyItemChanged(position);
-        }
-    }
 
     @Nullable
     @Override
@@ -311,9 +257,27 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
 
     }
 
-    @OnClick(R.id.iv_back)
-    void backClick() {
-        finish();
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
     }
 
+    @Override
+    public void onPageSelected(int position) {
+        if(0 == position){
+            tvLastPoem.setVisibility(View.GONE);
+            tvNextPoem.setVisibility(View.VISIBLE);
+        } else if(position == fragmentList.size() -1){
+            tvNextPoem.setVisibility(View.GONE);
+            tvLastPoem.setVisibility(View.VISIBLE);
+        } else{
+            tvNextPoem.setVisibility(View.VISIBLE);
+            tvLastPoem.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

@@ -6,6 +6,8 @@ import android.os.Build;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -20,7 +22,7 @@ import java.util.regex.Pattern;
  * @phone 136****1535
  * @desc string相关管理工具类
  */
-public class AppStringUtils {
+public class StringUtils {
 	/**
 	 * 判断字符串是否为空
 	 * @param str 字符串
@@ -558,6 +560,18 @@ public class AppStringUtils {
         } else {
             return false;
         }
+    }
+
+    public static String getShuffleString(String example){
+        StringBuffer sb = new StringBuffer();
+        if (example != null) {
+            List<String> strings = Arrays.asList(example.split(""));
+            Collections.shuffle(strings);
+            for (String str:strings) {
+                sb.append(str);
+            }
+        }
+        return sb.toString().equals("")?example:sb.toString();
     }
 
 }

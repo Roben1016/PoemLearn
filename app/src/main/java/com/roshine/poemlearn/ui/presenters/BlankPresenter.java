@@ -16,7 +16,7 @@ import com.roshine.poemlearn.ui.contracts.BlankContract;
  */
 public class BlankPresenter extends IBasePresenter<BlankContract.IBlankView> implements BlankContract.IBlankPresenter {
     @Override
-    public void getPoemData() {
+    public void getPoemData(String poemType,String schoolType) {
 
     }
 

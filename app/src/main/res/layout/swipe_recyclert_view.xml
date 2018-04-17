@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.roshine.lookbar.wight.recyclerview.refreshandload.LSAutoRecyclertView
+    <com.roshine.poemlearn.widgets.recyclerview.refreshandload.LSAutoRecyclertView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

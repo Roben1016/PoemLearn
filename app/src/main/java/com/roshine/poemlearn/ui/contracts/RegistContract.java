@@ -1,5 +1,7 @@
 package com.roshine.poemlearn.ui.contracts;
 
+import android.content.Context;
+
 import com.roshine.poemlearn.base.IBaseView;
 
 /**
@@ -15,6 +17,6 @@ public interface RegistContract {
     interface IRegistView extends IBaseView<Object>{
     }
     interface IRegistPresenter extends IBaseView<Object>{
-        void regist(String username,String password);
+        void regist(Context context,String username, String password);
     }
 }

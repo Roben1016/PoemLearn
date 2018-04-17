@@ -10,7 +10,7 @@ import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.utils.ActivityUtil;
 import com.roshine.poemlearn.utils.DisplayUtil;
 import com.roshine.poemlearn.utils.ToastUtil;
-import com.roshine.poemlearn.widgets.NormalProgressDialog;
+import com.roshine.poemlearn.widgets.CustomProgressDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -64,12 +64,12 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
     @Override
     public void showProgress(String message, boolean cancelable) {
-        NormalProgressDialog.showLoading(this,message,cancelable);
+        CustomProgressDialog.showLoading(this,message,cancelable);
     }
 
     @Override
     public void hideProgress() {
-        NormalProgressDialog.stopLoading();
+        CustomProgressDialog.stopLoading();
     }
 
     @Override
@@ -118,7 +118,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
         ActivityUtil.getInstance().removeActivity(this);//移除activity栈
         if (unbinder != null && unbinder != Unbinder.EMPTY) unbinder.unbind();
         this.unbinder = null;
-        NormalProgressDialog.stopLoading();
         if (isEventBus()) {
             EventBus.getDefault().unregister(this);
         }

@@ -14,6 +14,24 @@ public class PoemWordBean {
     private int bottomPosition;
     private boolean isPunctuation;
     private boolean isLongClick;
+    private String correctWord;
+    private boolean isErrorWord;
+
+    public boolean isErrorWord() {
+        return isErrorWord;
+    }
+
+    public void setErrorWord(boolean errorWord) {
+        isErrorWord = errorWord;
+    }
+
+    public String getCorrectWord() {
+        return correctWord;
+    }
+
+    public void setCorrectWord(String correctWord) {
+        this.correctWord = correctWord;
+    }
 
     public boolean isLongClick() {
         return isLongClick;

@@ -82,4 +82,5 @@ dependencies {
     implementation rootProject.ext.dependencies["rxlifecycle2-components"]
 
     implementation rootProject.ext.dependencies["multidex"]
+//    compile 'mysql:mysql-connector-java:5.1.16'
 }

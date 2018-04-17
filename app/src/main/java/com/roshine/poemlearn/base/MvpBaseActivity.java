@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
  * @desc mvp中activity基类
  */
 public abstract class MvpBaseActivity<V extends IBaseView,T extends IBasePresenter<V>> extends BaseToolBarActivity {
-    T mPresenter;
+    protected T mPresenter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
