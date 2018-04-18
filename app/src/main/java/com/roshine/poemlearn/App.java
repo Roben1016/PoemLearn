@@ -1,9 +1,11 @@
 package com.roshine.poemlearn;
 
+import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 
+import com.roshine.poemlearn.base.Constants;
+
+import cn.bmob.v3.Bmob;
 
 
 /**
@@ -15,26 +17,23 @@ import android.support.multidex.MultiDexApplication;
  * @phone 136****1535
  * @desc
  */
-public class App extends MultiDexApplication {
+public class App extends Application {
     private static Context applicationContext;
     @Override
     public void onCreate() {
         super.onCreate();
         applicationContext = getApplicationContext();
-//         安装LeakCanary
-//        if (LeakCanary.isInAnalyzerProcess(this)) {
-//            return;
-//        }
-//        LeakCanary.install(this);
+        //第一：默认初始化bmob-sdk
+        Bmob.initialize(this, Constants.BMOB_SDK_KEY);
     }
 
     public static Context getContext(){
         return applicationContext;
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
+//        MultiDex.install(this);
+//    }
 }

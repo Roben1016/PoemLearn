@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
 import com.roshine.poemlearn.beans.PoemBean;
+import com.roshine.poemlearn.beans.Poetry;
+import com.roshine.poemlearn.utils.LogUtil;
 import com.roshine.poemlearn.widgets.recyclerview.base.SimpleRecyclertViewAdater;
 import com.roshine.poemlearn.widgets.recyclerview.base.ViewHolder;
 import com.roshine.poemlearn.widgets.recyclerview.interfaces.OnItemClickListener;
@@ -23,6 +25,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * @author Roshine
@@ -47,6 +52,7 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
     private SimpleRecyclertViewAdater<PoemBean> mAdapter;
     private List<PoemBean> listData = new ArrayList<>();
     private int page;
+    private int limitCount = 10;//10条数据
 
     @Override
     protected int getLayoutId() {
@@ -70,6 +76,7 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
             tvTitle.setText(getResources().getString(R.string.recite_tang));
         }
         initRecycleView();
+        swipRecyclerView.setRefreshing(true);
         initData(0);
     }
 
@@ -104,48 +111,85 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
     }
 
     private void initData(int page) {
-        if(page == 0 && listData != null){
-            listData.clear();
+        if(poemType == 1){
+            BmobQuery<Poetry> query=new BmobQuery<Poetry>();
+            query.addWhereEqualTo("p_type"," 宋词");
+            query.setLimit(limitCount);
+            if (page != 0) {
+                query.setSkip(limitCount * page);
+            }
+            query.findObjects(new FindListener<Poetry>() {
+                @Override
+                public void done(List<Poetry> list, BmobException e) {
+                    if(e ==null){
+                         loadSuc(list,page);
+                    }else{
+                        loadFail(getResources().getString(R.string.load_failed),page);
+                        LogUtil.show("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                    }
+                }
+            });
+        }else{
+            String school = " 小学";
+            if(schoolType == 1){//初中
+                school = " 初中";
+//            initJuniorPoem();
+            }else if(schoolType == 2){
+                school = " 高中";
+//            initHighPoem();
+            }else{
+                school = " 小学";
+//            initPrimaryPoem();
+            }
+            BmobQuery<Poetry> query=new BmobQuery<Poetry>();
+            query.addWhereEqualTo("p_type",school);
+            query.setLimit(limitCount);
+            if (page != 0) {
+                query.setSkip(limitCount * page);
+            }
+            query.findObjects(new FindListener<Poetry>() {
+                @Override
+                public void done(List<Poetry> list, BmobException e) {
+                    if(e ==null){
+                        loadSuc(list,page);
+                    }else{
+                        loadFail(getResources().getString(R.string.load_failed),page);
+                        LogUtil.show("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                    }
+                }
+            });
         }
-        PoemBean poemBean = new PoemBean();
-        poemBean.setCorrectPoem("折戟沉沙铁未销，自将磨洗认前朝。东风不与周郎便，铜雀春深锁二乔。");
-        poemBean.setPoemAuthor("杜牧");
-        poemBean.setPoemTitle("赤壁");
-        poemBean.setPoemYear("唐");
-        listData.add(poemBean);
+    }
 
-        PoemBean poemBean1 = new PoemBean();
-        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
-        poemBean1.setPoemAuthor("柳宗元");
-        poemBean1.setPoemTitle("江雪");
-        poemBean1.setPoemYear("唐");
-        listData.add(poemBean1);
+    private void loadFail(String string, int page) {
+        toast(string);
+        if(page == 0){
+            swipRecyclerView.setRefreshing(false);
+        }else{
+            swipRecyclerView.setLoadMoreFinish(SwipeRecyclertView.LOAD_MORE_FAIL);
+            this.page = page - 1;
+        }
+    }
 
-        PoemBean poemBean2 = new PoemBean();
-        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
-        poemBean2.setPoemAuthor("孟浩然");
-        poemBean2.setPoemTitle("春晓");
-        poemBean2.setPoemYear("唐");
-        listData.add(poemBean2);
-
-        PoemBean poemBean3 = new PoemBean();
-        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
-        poemBean3.setPoemAuthor("王维");
-        poemBean3.setPoemTitle("鹿柴");
-        poemBean3.setPoemYear("唐");
-        listData.add(poemBean3);
-
-        PoemBean poemBean4 = new PoemBean();
-        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
-        poemBean4.setPoemAuthor("王之涣");
-        poemBean4.setPoemTitle("登鹳雀楼");
-        poemBean4.setPoemYear("唐");
-        listData.add(poemBean4);
+    private void loadSuc(List<Poetry> list, int page) {
         swipRecyclerView.setRefreshing(false);
-        if(page == 10){
+        if(list.size() == 0 || list.size() < limitCount){
             swipRecyclerView.setLoadMoreFinish(SwipeRecyclertView.LOAD_NO_MORE);
+            toast(getResources().getString(R.string.no_more_text));
         }else{
             swipRecyclerView.setLoadMoreFinish(SwipeRecyclertView.LOAD_MORE_SUC);
+        }
+        if(this.page == 0){
+            listData.clear();
+        }
+        for (int i = 0; i < list.size(); i++) {
+            Poetry poetry = list.get(i);
+            PoemBean poemBean = new PoemBean();
+            poemBean.setCorrectPoem(poetry.getP_content());
+            poemBean.setPoemYear(poetry.getP_source());
+            poemBean.setPoemTitle(poetry.getP_name());
+            poemBean.setPoemAuthor(poetry.getP_author());
+            listData.add(poemBean);
         }
         reflashAdapter();
     }
@@ -163,17 +207,18 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
 
     @Override
     public void onRefresh() {
+        page = 0;
         initData(0);
     }
 
     @Override
     public void onLoadMore() {
-        initData(page++);
+        initData(++page);
     }
 
     @Override
     public void onReLoadMore() {
-
+        initData(page);
     }
 
     @Override

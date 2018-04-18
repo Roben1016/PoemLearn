@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
-    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
-
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+//    **兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**
+    useLibrary 'org.apache.http.legacy'
     //lambda
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -11,12 +12,11 @@ android {
     }
 
     defaultConfig {
-        applicationId rootProject.ext.android["appId"]
-        minSdkVersion rootProject.ext.android["minSdkVersion"]
-        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
-        versionCode rootProject.ext.android["versionCode"]
-        versionName rootProject.ext.android["versionName"]
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        applicationId "com.roshine.poemlearn"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -33,54 +33,15 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation(rootProject.ext.dependencies["appcompat-v7"]) {
-        exclude module: 'support-annotations'
-        exclude module: 'support-v4'
-    }
-    implementation(rootProject.ext.dependencies["design"]) {
-        exclude module: 'support-annotations'
-        exclude module: 'appcompat-v7'
-        exclude module: 'support-v4'
-    }
-    implementation(rootProject.ext.dependencies["cardview-v7"]) {
-        exclude module: 'support-annotations'
-    }
-    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
-    //tools
-    implementation rootProject.ext.dependencies["gson"]
-    implementation(rootProject.ext.dependencies["butterknife"]) {
-        exclude module: 'support-annotations'
-    }
-    implementation rootProject.ext.dependencies["event_bus"]
-    implementation(rootProject.ext.dependencies["retrofit"]) {
-        exclude module: 'okhttp'
-        exclude module: 'okio'
-    }
-    implementation(rootProject.ext.dependencies["retrofit-converter-gson"]) {
-        exclude module: 'gson'
-        exclude module: 'okhttp'
-        exclude module: 'okio'
-        exclude module: 'retrofit'
-    }
-    implementation(rootProject.ext.dependencies["retrofit-adapter-rxjava2"]) {
-        exclude module: 'rxjava'
-        exclude module: 'okhttp'
-        exclude module: 'retrofit'
-        exclude module: 'okio'
-    }
-    implementation rootProject.ext.dependencies["okhttp3"]
-
-    //rx2
-    implementation rootProject.ext.dependencies["rxjava2"]
-    implementation(rootProject.ext.dependencies["rxandroid2"]) {
-        exclude module: 'rxjava'
-    }
-    implementation rootProject.ext.dependencies["rxlifecycle2-components"]
-
-    implementation rootProject.ext.dependencies["multidex"]
-//    compile 'mysql:mysql-connector-java:5.1.16'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:26.1.0"
+    compile "com.android.support:design:26.1.0"
+    compile "com.android.support:cardview-v7:26.1.0"
+    annotationProcessor "com.jakewharton:butterknife-compiler:8.6.0"
+    compile "com.jakewharton:butterknife:8.6.0"
+    compile "org.greenrobot:eventbus:3.0.0"
+    //以下SDK开发者请根据需要自行选择
+    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
+    //3.5.5：请务必查看下面注释[1]
+    compile 'cn.bmob.android:bmob-sdk:3.6.0'
 }

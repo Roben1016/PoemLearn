@@ -109,6 +109,7 @@ public class BlankFragement extends BasePageFragment {
         topData.clear();
         bottomData.clear();
         String correctPoem = mPoemBean.getCorrectPoem();
+        correctPoem = correctPoem.replaceAll(" ","");
         for (int i = 0; i < correctPoem.length(); i++) {
             String word = String.valueOf(correctPoem.charAt(i));
             PoemWordBean poemWordBean = new PoemWordBean();
@@ -150,9 +151,9 @@ public class BlankFragement extends BasePageFragment {
 
     private void initTopRecycleView() {
         if(topCount <= 0){
-            topCount = maxTopCount - 1;
+            topCount = maxTopCount;
         } else if(topCount >= maxTopCount){
-            topCount = maxTopCount - 1;
+            topCount = maxTopCount;
         }
         SpacesItemDecoration universalDecoration = new SpacesItemDecoration(5);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), topCount, GridLayoutManager.VERTICAL, false);

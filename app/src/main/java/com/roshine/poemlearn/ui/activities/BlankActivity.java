@@ -10,19 +10,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
-import com.roshine.poemlearn.base.MvpBaseActivity;
+import com.roshine.poemlearn.base.BaseToolBarActivity;
 import com.roshine.poemlearn.beans.PoemBean;
+import com.roshine.poemlearn.beans.Poetry;
 import com.roshine.poemlearn.ui.adapters.BlankFragmentAdapter;
-import com.roshine.poemlearn.ui.contracts.BlankContract;
 import com.roshine.poemlearn.ui.fragments.BlankFragement;
-import com.roshine.poemlearn.ui.presenters.BlankPresenter;
-import com.roshine.poemlearn.utils.StringUtils;
+import com.roshine.poemlearn.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobQueryResult;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SQLQueryListener;
 
 /**
  * @author Roshine
@@ -33,7 +38,7 @@ import butterknife.OnClick;
  * @phone 136****1535
  * @desc
  */
-public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, BlankPresenter> implements BlankContract.IBlankView, ViewPager.OnPageChangeListener {
+public class BlankActivity extends BaseToolBarActivity implements ViewPager.OnPageChangeListener {
 
     @BindView(R.id.iv_back)
     ImageView ivBack;
@@ -51,10 +56,6 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
     private BlankFragmentAdapter fragmentAdapter;
     private int schoolType;
 
-    @Override
-    public BlankPresenter getPresenter() {
-        return new BlankPresenter();
-    }
 
     @Override
     protected int getLayoutId() {
@@ -73,154 +74,97 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
         }
         ivBack.setVisibility(View.VISIBLE);
         if (1 == poemType) {
-            tvTitle.setText(getResources().getString(R.string.song_blank_text));
+            tvTitle.setText(getResources().getString(R.string.confirmgame_song));
         } else {
-            tvTitle.setText(getResources().getString(R.string.tang_blank_text));
+            tvTitle.setText(getResources().getString(R.string.confirmgame_tang));
         }
         initData();
     }
 
     private void initData() {
-        if(schoolType == 1){//初中
-            initJuniorPoem();
-        }else if(schoolType == 2){
-            initHighPoem();
+        showProgress();
+        if(poemType == 1){
+            BmobQuery<Poetry> query=new BmobQuery<Poetry>();
+            query.addWhereEqualTo("p_type"," 宋词");
+            //设置查询的SQL语句
+            query.findObjects(new FindListener<Poetry>() {
+                @Override
+                public void done(List<Poetry> list, BmobException e) {
+                    if(e ==null){
+                        if(list!=null && list.size()>0){
+                            loadSuc(list);
+                        }else{
+                            loadFail(getResources().getString(R.string.no_data));
+                            LogUtil.show("smile", "查询成功，无数据返回");
+                        }
+                    }else{
+                        loadFail(getResources().getString(R.string.load_failed));
+                        LogUtil.show("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                    }
+                }
+            });
         }else{
-            initPrimaryPoem();
-        }
+            String school = " 小学";
 
+            if(schoolType == 1){//初中
+                school = " 初中";
+//            initJuniorPoem();
+            }else if(schoolType == 2){
+                school = " 高中";
+//            initHighPoem();
+            }else{
+                school = " 小学";
+//            initPrimaryPoem();
+            }
+            BmobQuery<Poetry> query=new BmobQuery<Poetry>();
+            query.addWhereEqualTo("p_type",school);
+            //设置查询的SQL语句
+            query.findObjects(new FindListener<Poetry>() {
+                @Override
+                public void done(List<Poetry> list, BmobException e) {
+                    if(e ==null){
+                        if(list!=null && list.size()>0){
+                            loadSuc(list);
+                        }else{
+                            loadFail(getResources().getString(R.string.no_data));
+                            LogUtil.show("smile", "查询成功，无数据返回");
+                        }
+                    }else{
+                        loadFail(getResources().getString(R.string.load_failed));
+                        LogUtil.show("smile", "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
+                    }
+                }
+            });
+        }
+    }
+
+    private void loadSuc(List<Poetry> list) {
+        hideProgress();
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            int i1 = random.nextInt(list.size());
+            LogUtil.show("随机："+i1);
+            Poetry poetry = list.get(i1);
+            PoemBean poemBean = new PoemBean();
+            poemBean.setCorrectPoem(poetry.getP_content());
+            poemBean.setPoemAuthor(poetry.getP_author());
+            poemBean.setPoemTitle(poetry.getP_name());
+            poemBean.setPoemYear(poetry.getP_source());
+            Fragment fragment = BlankFragement.newInstance(i, poemType, poemBean);
+            fragmentList.add(fragment);
+        }
         fragmentAdapter = new BlankFragmentAdapter(getSupportFragmentManager(), fragmentList);
         mViewPager.setAdapter(fragmentAdapter);
         mViewPager.setOffscreenPageLimit(fragmentList.size());
         mViewPager.addOnPageChangeListener(this);
-
     }
 
-    private void initHighPoem() {
-        PoemBean poemBean = new PoemBean();
-        poemBean.setCorrectPoem("折戟沉沙铁未销，自将磨洗认前朝。东风不与周郎便，铜雀春深锁二乔。");
-        poemBean.setPoemAuthor("杜牧");
-        poemBean.setPoemTitle("赤壁");
-        poemBean.setPoemYear("唐");
-        Fragment fragment = BlankFragement.newInstance(0, poemType, poemBean);
-        fragmentList.add(fragment);
-
-        PoemBean poemBean1 = new PoemBean();
-        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
-        poemBean1.setPoemAuthor("柳宗元");
-        poemBean1.setPoemTitle("江雪");
-        poemBean1.setPoemYear("唐");
-        Fragment fragment1 = BlankFragement.newInstance(1, poemType, poemBean1);
-        fragmentList.add(fragment1);
-
-        PoemBean poemBean2 = new PoemBean();
-        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
-        poemBean2.setPoemAuthor("孟浩然");
-        poemBean2.setPoemTitle("春晓");
-        poemBean2.setPoemYear("唐");
-        Fragment fragment2 = BlankFragement.newInstance(2, poemType, poemBean2);
-        fragmentList.add(fragment2);
-
-        PoemBean poemBean3 = new PoemBean();
-        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
-        poemBean3.setPoemAuthor("王维");
-        poemBean3.setPoemTitle("鹿柴");
-        poemBean3.setPoemYear("唐");
-        Fragment fragment3 = BlankFragement.newInstance(3, poemType, poemBean3);
-        fragmentList.add(fragment3);
-
-        PoemBean poemBean4 = new PoemBean();
-        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
-        poemBean4.setPoemAuthor("王之涣");
-        poemBean4.setPoemTitle("登鹳雀楼");
-        poemBean4.setPoemYear("唐");
-        Fragment fragment4 = BlankFragement.newInstance(4, poemType, poemBean4);
-        fragmentList.add(fragment4);
+    private void loadFail(String string) {
+        hideProgress();
+        toast(string);
+        finish();
     }
 
-    private void initJuniorPoem() {
-        PoemBean poemBean = new PoemBean();
-        poemBean.setCorrectPoem("折戟沉沙铁未销，自将磨洗认前朝。东风不与周郎便，铜雀春深锁二乔。");
-        poemBean.setPoemAuthor("杜牧");
-        poemBean.setPoemTitle("赤壁");
-        poemBean.setPoemYear("唐");
-        Fragment fragment = BlankFragement.newInstance(0, poemType, poemBean);
-        fragmentList.add(fragment);
-
-        PoemBean poemBean1 = new PoemBean();
-        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
-        poemBean1.setPoemAuthor("柳宗元");
-        poemBean1.setPoemTitle("江雪");
-        poemBean1.setPoemYear("唐");
-        Fragment fragment1 = BlankFragement.newInstance(1, poemType, poemBean1);
-        fragmentList.add(fragment1);
-
-        PoemBean poemBean2 = new PoemBean();
-        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
-        poemBean2.setPoemAuthor("孟浩然");
-        poemBean2.setPoemTitle("春晓");
-        poemBean2.setPoemYear("唐");
-        Fragment fragment2 = BlankFragement.newInstance(2, poemType, poemBean2);
-        fragmentList.add(fragment2);
-
-        PoemBean poemBean3 = new PoemBean();
-        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
-        poemBean3.setPoemAuthor("王维");
-        poemBean3.setPoemTitle("鹿柴");
-        poemBean3.setPoemYear("唐");
-        Fragment fragment3 = BlankFragement.newInstance(3, poemType, poemBean3);
-        fragmentList.add(fragment3);
-
-        PoemBean poemBean4 = new PoemBean();
-        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
-        poemBean4.setPoemAuthor("王之涣");
-        poemBean4.setPoemTitle("登鹳雀楼");
-        poemBean4.setPoemYear("唐");
-        Fragment fragment4 = BlankFragement.newInstance(4, poemType, poemBean4);
-        fragmentList.add(fragment4);
-    }
-
-    private void initPrimaryPoem() {
-        PoemBean poemBean = new PoemBean();
-        poemBean.setCorrectPoem("床前明月光，疑是地上霜。举头望明月，低头思故乡。");
-        poemBean.setPoemAuthor("李白");
-        poemBean.setPoemTitle("静夜思");
-        poemBean.setPoemYear("唐");
-        Fragment fragment = BlankFragement.newInstance(0, poemType, poemBean);
-        fragmentList.add(fragment);
-
-        PoemBean poemBean1 = new PoemBean();
-        poemBean1.setCorrectPoem("千山鸟飞绝，万径人踪灭。孤舟蓑笠翁，独钓寒江雪。");
-        poemBean1.setPoemAuthor("柳宗元");
-        poemBean1.setPoemTitle("江雪");
-        poemBean1.setPoemYear("唐");
-        Fragment fragment1 = BlankFragement.newInstance(1, poemType, poemBean1);
-        fragmentList.add(fragment1);
-
-        PoemBean poemBean2 = new PoemBean();
-        poemBean2.setCorrectPoem("春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。");
-        poemBean2.setPoemAuthor("孟浩然");
-        poemBean2.setPoemTitle("春晓");
-        poemBean2.setPoemYear("唐");
-        Fragment fragment2 = BlankFragement.newInstance(2, poemType, poemBean2);
-        fragmentList.add(fragment2);
-
-        PoemBean poemBean3 = new PoemBean();
-        poemBean3.setCorrectPoem("空山不见人，但闻人语响。返景入深林，复照青苔上。");
-        poemBean3.setPoemAuthor("王维");
-        poemBean3.setPoemTitle("鹿柴");
-        poemBean3.setPoemYear("唐");
-        Fragment fragment3 = BlankFragement.newInstance(3, poemType, poemBean3);
-        fragmentList.add(fragment3);
-
-        PoemBean poemBean4 = new PoemBean();
-        poemBean4.setCorrectPoem("白日依山尽，黄河入海流。欲穷千里目，更上一层楼。");
-        poemBean4.setPoemAuthor("王之涣");
-        poemBean4.setPoemTitle("登鹳雀楼");
-        poemBean4.setPoemYear("唐");
-        Fragment fragment4 = BlankFragement.newInstance(4, poemType, poemBean4);
-        fragmentList.add(fragment4);
-    }
 
     @OnClick(R.id.iv_back)
     void backClick() {
@@ -229,7 +173,6 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
     @OnClick(R.id.tv_last_poem)
     void lastPoemClick(){
         int currentItem = mViewPager.getCurrentItem();
-        toast(currentItem + "=点击上一页="+fragmentList.size());
         if(currentItem == 0){
             return;
         }
@@ -238,24 +181,12 @@ public class BlankActivity extends MvpBaseActivity<BlankContract.IBlankView, Bla
     @OnClick(R.id.tv_next_poem)
     void nextPoemClick(){
         int currentItem = mViewPager.getCurrentItem();
-        toast(currentItem + "=点击下一页="+fragmentList.size());
         if(currentItem == fragmentList.size() -1){
             return;
         }
         mViewPager.setCurrentItem(currentItem + 1);
     }
 
-
-    @Nullable
-    @Override
-    public void loadSuccess(Object datas) {
-
-    }
-
-    @Override
-    public void loadFail(String message) {
-
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

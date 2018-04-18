@@ -46,4 +46,10 @@
     <string name="password_error">密码错误</string>
     <string name="no_user_or_password">用户不存在或密码错误</string>
     <string name="regist_success">注册成功</string>
+    <string name="song_chongguan_text">宋词冲关</string>
+    <string name="tang_chongguan_text">唐诗冲关</string>
+    <string name="beisong_song">宋词背诵</string>
+    <string name="beisong_tang">唐诗背诵</string>
+    <string name="load_failed">加载数据失败</string>
+    <string name="no_data">加载失败，没有数据</string>
 </resources>

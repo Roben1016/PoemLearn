@@ -1,11 +1,6 @@
 package com.roshine.poemlearn.ui.activities;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -14,14 +9,18 @@ import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
-import com.roshine.poemlearn.base.Constants;
-import com.roshine.poemlearn.base.MvpBaseActivity;
-import com.roshine.poemlearn.ui.contracts.LoginContract;
-import com.roshine.poemlearn.ui.presenters.LoginPresenter;
-import com.roshine.poemlearn.utils.LogUtil;
+import com.roshine.poemlearn.beans.Config;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * @author Roshine
@@ -62,90 +61,42 @@ public class LoginActivity extends BaseToolBarActivity{
 
     @OnClick(R.id.btn_login)
     void loginClick() {
-//        if(TextUtils.isEmpty(etUserName.getText())){
-//            toast(getResources().getString(R.string.user_name_null));
-//            return;
-//        }
-//        if(etUserName.getText().toString().length() > 15){
-//            toast(getResources().getString(R.string.user_name_long));
-//            return;
-//        }
-//        if(TextUtils.isEmpty(etUserPwd.getText())){
-//            toast(getResources().getString(R.string.password_null));
-//            return;
-//        }
-//        if(etUserPwd.getText().toString().length() > 15){
-//            toast(getResources().getString(R.string.password_long));
-//            return;
-//        }
+        if(TextUtils.isEmpty(etUserName.getText())){
+            toast(getResources().getString(R.string.user_name_null));
+            return;
+        }
+        if(etUserName.getText().toString().length() > 15){
+            toast(getResources().getString(R.string.user_name_long));
+            return;
+        }
+        if(TextUtils.isEmpty(etUserPwd.getText())){
+            toast(getResources().getString(R.string.password_null));
+            return;
+        }
+        if(etUserPwd.getText().toString().length() > 15){
+            toast(getResources().getString(R.string.password_long));
+            return;
+        }
         showProgress(getResources().getString(R.string.logining),false);
-        loadSuccess();
-//        login(etUserName.getText().toString(),etUserPwd.getText().toString());
+        login(etUserName.getText().toString(),etUserPwd.getText().toString());
     }
 
     private void login(String username, String password) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                SQLiteDatabase database = SQLiteDatabase.openOrCreateDatabase(Constants.POEM_DB_PATH, null);
-//                Cursor cursor = database.rawQuery("select "+Constants.LOGIN_DB_PASSWORD+" from "+Constants.LOGIN_DB_TABLE+" where "+Constants.LOGIN_DB_USER_NAME+"=?", new String[]{username});
-//                if (cursor != null) {
-//                    if(cursor.moveToFirst()){
-//                        int columnIndex = cursor.getColumnIndex(Constants.LOGIN_DB_USER_NAME);
-//                        if(columnIndex != -1){
-//                            String string = cursor.getString(columnIndex);
-//                            if(password.equals(string)){
-//                                Message message = handler.obtainMessage();
-//                                message.what = LOGIN_SUC;
-//                                handler.sendMessage(message);
-//                            }else{
-//                                Message message = handler.obtainMessage();
-//                                message.what = LOGIN_FAIL;
-//                                message.obj = getResources().getString(R.string.password_error);
-//                                handler.sendMessage(message);
-//                            }
-//                        }else{
-//                            LogUtil.show("登录失败，columnIndex = -1");
-//                            Message message = handler.obtainMessage();
-//                            message.what = LOGIN_FAIL;
-//                            message.obj = getResources().getString(R.string.no_user_or_password);
-//                            handler.sendMessage(message);
-//                        }
-//                    }else{
-//                        LogUtil.show("登录失败，cursor 为空");
-//                        Message message = handler.obtainMessage();
-//                        message.what = LOGIN_FAIL;
-//                        message.obj = getResources().getString(R.string.no_user);
-//                        handler.sendMessage(message);
-//                    }
-//                    cursor.close();
-//                    database.close();
-//                }else{
-//                    LogUtil.show("登录失败，moveToFirst 为false");
-//                    Message message = handler.obtainMessage();
-//                    message.what = LOGIN_FAIL;
-//                    message.obj = getResources().getString(R.string.login_fail);
-//                    handler.sendMessage(message);
-//                }
-//            }
-//        }).start();
-    }
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case LOGIN_SUC:
+        BmobUser user = new BmobUser();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.login(new SaveListener<BmobUser>() {
+            @Override
+            public void done(BmobUser bmobUser, BmobException e) {
+                if (e == null && bmobUser != null) {
+                    Config.getInstance().user = bmobUser;
                     loadSuccess();
-                    break;
-                case LOGIN_FAIL:
-                    loadFail((String) msg.obj);
-                    break;
-                default:
-                    break;
+                } else {
+                    loadFail(getResources().getString(R.string.login_fail));
+                }
             }
-        }
-    };
+        });
+    }
 
     @OnClick(R.id.btn_regist)
     void registClick() {

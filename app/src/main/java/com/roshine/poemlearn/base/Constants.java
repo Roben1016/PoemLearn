@@ -26,8 +26,9 @@ public class Constants {
     public static class Urls{
         public static final String BASE_URL = "https://www.gushiwen.org/";
     }
-    public static String POEM_DB_PATH = Environment.getExternalStorageDirectory()+"/poetry.db";
+    public static String POEM_DB_PATH = Environment.getExternalStorageDirectory()+"/Poetry.db";
     public static String LOGIN_DB_TABLE = "login";
     public static String LOGIN_DB_USER_NAME = "username";
     public static String LOGIN_DB_PASSWORD = "password";
+    public static String BMOB_SDK_KEY = "bda0ddc3c90e621897e233f9e91d30e5";
 }

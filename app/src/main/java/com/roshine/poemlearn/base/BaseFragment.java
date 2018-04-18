@@ -8,10 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.utils.ToastUtil;
-import com.roshine.poemlearn.widgets.NormalProgressDialog;
+import com.roshine.poemlearn.widgets.CustomProgressDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -71,13 +70,13 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @Override
     public void showProgress(String message, boolean cancelable) {
         if (getActivity() != null) {
-            NormalProgressDialog.showLoading(getActivity(),message,cancelable);
+            CustomProgressDialog.showLoading(getActivity(),message,cancelable);
         }
     }
 
     @Override
     public void hideProgress() {
-        NormalProgressDialog.stopLoading();
+        CustomProgressDialog.stopLoading();
     }
 
     @Override

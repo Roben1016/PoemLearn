@@ -67,7 +67,7 @@ public class ConfirmGameFragment extends BasePageFragment {
 
     private void initViews() {
         String correctPoem = mPoemBean.getCorrectPoem();
-        String correctPoem2 = correctPoem.replaceAll("[，。、？,.?]", "\r\n");
+        String correctPoem2 = correctPoem.replaceAll("[，。、？！!,.?]", "\r\n");
         tvPoemTitle.setText(mPoemBean.getPoemTitle());
         tvPoemAuthor.setText(mPoemBean.getPoemAuthor());
         tvPoemYear.setText(mPoemBean.getPoemYear());

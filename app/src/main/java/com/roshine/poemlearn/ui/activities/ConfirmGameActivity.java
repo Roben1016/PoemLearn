@@ -62,9 +62,9 @@ public class ConfirmGameActivity extends BaseToolBarActivity implements ViewPage
         }
         ivBack.setVisibility(View.VISIBLE);
         if (1 == poemType) {
-            tvTitle.setText(getResources().getString(R.string.confirmgame_song));
+            tvTitle.setText(getResources().getString(R.string.beisong_song));
         } else {
-            tvTitle.setText(getResources().getString(R.string.confirmgame_tang));
+            tvTitle.setText(getResources().getString(R.string.beisong_tang));
         }
         initData();
     }

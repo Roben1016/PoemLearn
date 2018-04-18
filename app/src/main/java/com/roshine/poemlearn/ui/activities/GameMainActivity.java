@@ -64,6 +64,11 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
         }
         setImages();
         rbPrimary.setChecked(true);
+        if(poemType == 1){//宋词没有初中高中之分
+            rgGames.setVisibility(View.GONE);
+        }else{
+            rgGames.setVisibility(View.VISIBLE);
+        }
         rgGames.setOnCheckedChangeListener(this);
         ivBack.setVisibility(View.VISIBLE);
     }
@@ -90,7 +95,7 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
         Bundle bundle = new Bundle();
         bundle.putInt("poemType",poemType);
         bundle.putInt("schoolType",schoolType);
-        startActivity(BlankActivity.class,bundle);
+        startActivity(TianKongActivity.class,bundle);
     }
 
     @OnClick(R.id.iv_recite)
@@ -100,113 +105,12 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
         bundle.putInt("schoolType",schoolType);
         startActivity(ReciteActivity.class,bundle);
     }
-    //主线程接受信息
-//    Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            Bundle data = msg.getData();
-//            String val = data.getString("content");
-//            LogUtil.show("Output Test", "article content is-->" + val);
-//            // UI界面的更新等相关操作
-//
-//            LogUtil.show("....","....");
-//            toast(val);
-//        }
-//    };
     @OnClick(R.id.iv_poem_game)
     void poemGameClick() {
         Bundle bundle = new Bundle();
         bundle.putInt("poemType",poemType);
         bundle.putInt("schoolType",schoolType);
-        startActivity(ConfirmGameActivity.class,bundle);
-//        SQLiteDatabase database = SQLiteDatabase.openOrCreateDatabase(Environment.getExternalStorageDirectory()+"/poetry.db", null);
-//        String selectSQL = "select * from person";
-//        Cursor cursor = database.rawQuery(selectSQL, null);
-//        if(cursor.moveToFirst()) {
-//            String name = cursor.getString(cursor.getColumnIndex("name"));
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    toast(name);
-//                }
-//            });
-//        }
-//        cursor.close();
-//        database.close();
-
-
-//        poemDataBaseHelper = new PoemDataBaseHelper(this);
-//        SQLiteDatabase writableDatabase = poemDataBaseHelper.getWritableDatabase();
-//        ContentValues cv = new ContentValues();
-//        cv.put("name", "jack");
-//        cv.put("number", "3");
-//        long person = database.insert("person", null, cv);
-//        toast(""+person);
-        //子线程连接数据库
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        Runnable networkTask = new Runnable() {
-//            @Override
-//            public void run() {
-//                Message msg = new Message();
-//                Bundle data = new Bundle();
-//                Statement statement = null;
-//                Connection jdbcConnection = null;
-//                ResultSet resultSet = null;
-//                try {
-//                    Class.forName("com.mysql.jdbc.Driver");
-//                    //ip地址得随网络改（仅限本人此程序）
-//                    String DB_URL = "jdbc:mysql://localhost:3306/poetry";
-//                    String username = "root";
-//                    String password = "abc123";
-//                    jdbcConnection = DriverManager.getConnection(DB_URL, username, password);
-//                    statement = jdbcConnection.createStatement();
-//                    String sql = "select content from poetry where name = '" +"伤心行"+ "'";
-//                    System.out.println(sql);
-//                    resultSet = statement.executeQuery(sql);
-//
-//                    while (resultSet.next()) {
-//                       String contents =  resultSet.getString("content");
-//                       data.putString("content",contents);
-//                        LogUtil.show("Debug", "Start Run Task..."+contents);
-//                    }
-//                } catch (ClassNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (java.sql.SQLException e) {
-//                    e.printStackTrace();
-//                }finally {
-//                    if (jdbcConnection != null) {
-//                        try {
-//                            jdbcConnection.close();
-//                        } catch (SQLException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    if (statement != null) {
-//                        try {
-//                            statement.close();
-//                        } catch (SQLException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    if (resultSet != null) {
-//                        try {
-//                            resultSet.close();
-//                        } catch (SQLException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//                 msg.setData(data);
-//                handler.sendMessage(msg);
-//            }
-//        };
-//        new Thread(networkTask).start();
-//        LogUtil.show("Debug Input", "Search Over");
+        startActivity(BlankActivity.class,bundle);
     }
 
     @Override

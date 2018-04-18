@@ -37,7 +37,7 @@ public class MainActivity extends BaseToolBarActivity {
     @OnClick(R.id.iv_tang)
     void tangClick(){
         Bundle bundle = new Bundle();
-        bundle.putInt("type",0);
+        bundle.putInt("poemType",0);
         startActivity(GameMainActivity.class,bundle);
     }
     @OnClick(R.id.iv_song)
