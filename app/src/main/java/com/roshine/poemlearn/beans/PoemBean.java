@@ -16,7 +16,15 @@ public class PoemBean implements Serializable{
     private String poemYear;
     private String poemAuthor;
     private String correctPoem;
-//    private String disturbPoem;
+    private String poemId;
+
+    public String getPoemId() {
+        return poemId;
+    }
+
+    public void setPoemId(String poemId) {
+        this.poemId = poemId;
+    }
 
     public String getPoemTitle() {
         return poemTitle;

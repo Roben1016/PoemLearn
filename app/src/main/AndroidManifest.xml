@@ -44,13 +44,19 @@
         <activity android:name=".ui.activities.BlankActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
-        <activity android:name=".ui.activities.ConfirmGameActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MainTheme"/>
         <activity android:name=".ui.activities.ReciteActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
         <activity android:name=".ui.activities.TianKongActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
+        <activity android:name=".ui.activities.HistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
+        <activity android:name=".ui.activities.PoetryDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme"/>
+        <activity android:name=".ui.activities.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme"/>
     </application>

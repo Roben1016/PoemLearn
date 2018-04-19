@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.ArraySet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -150,6 +151,7 @@ public class BlankActivity extends BaseToolBarActivity implements ViewPager.OnPa
             poemBean.setPoemAuthor(poetry.getP_author());
             poemBean.setPoemTitle(poetry.getP_name());
             poemBean.setPoemYear(poetry.getP_source());
+            poemBean.setPoemId(poetry.getObjectId());
             Fragment fragment = BlankFragement.newInstance(i, poemType, poemBean);
             fragmentList.add(fragment);
         }

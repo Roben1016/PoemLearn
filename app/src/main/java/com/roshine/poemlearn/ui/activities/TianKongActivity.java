@@ -13,13 +13,12 @@ import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
-import com.roshine.poemlearn.beans.PoetryHistory;
-import com.roshine.poemlearn.beans.Poetry;
 import com.roshine.poemlearn.beans.Config;
+import com.roshine.poemlearn.beans.Poetry;
+import com.roshine.poemlearn.beans.PoetryHistory;
 import com.roshine.poemlearn.utils.LogUtil;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +27,8 @@ import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * @author Roshine
@@ -143,9 +144,6 @@ public class TianKongActivity extends BaseToolBarActivity {
         if (listData != null) {
             listData.clear();
             listData.addAll(lists);
-            for (int i = 0; i < lists.size(); i++) {
-                LogUtil.show(i+":"+lists.get(i).getP_content());
-            }
             next();
         }
     }
@@ -197,15 +195,7 @@ public class TianKongActivity extends BaseToolBarActivity {
         current = shici;
 
         //保存历史记录
-        PoetryHistory historyBean = new PoetryHistory();
-        historyBean.setPoem_author(current.getP_author());
-        historyBean.setPoem_content(current.getP_content());
-        historyBean.setPoem_year(current.getP_source());
-        historyBean.setPoem_title(current.getP_name());
-        historyBean.setPoem_last_time(new Date(System.currentTimeMillis()));
-        historyBean.setPoem_user(Config.getInstance().user.getUsername());
-        historyBean.setPoem_id(current.getId());
-        historyBean.save();
+        saveHistory(shici);
 
         tvPoemName.setText(shici.getP_name());
         tvPoemAuthor.setText(shici.getP_author());
@@ -220,22 +210,22 @@ public class TianKongActivity extends BaseToolBarActivity {
             content = split;
         }
 
-        int s = content.length / 2;
-        editTexts = new EditText[s];
-        rights = new String[s];
+        int hang = content.length / 2;
+        editTexts = new EditText[hang];
+        rights = new String[hang];
 
         llContainer.removeAllViews();
-        for (int i = 0; i < s; i++) {
-            int ii = r.nextInt(100) % 2;
+        for (int i = 0; i < hang; i++) {
+            int kong = r.nextInt(100) % 2;
             int layout = -1;
-            if (ii == 0) {
+            if (kong == 0) {
                 layout = R.layout.tinakong_item1;
             } else {
                 layout = R.layout.tinakong_item;
             }
             View v = getLayoutInflater().inflate(layout, null);
             editTexts[i] = (EditText) v.findViewById(R.id.edit);
-            if (ii == 0) {
+            if (kong == 0) {
                 ((TextView) v.findViewById(R.id.txt)).setText(content[i * 2 + 1]);
                 rights[i] = content[i * 2];
             } else {
@@ -244,5 +234,34 @@ public class TianKongActivity extends BaseToolBarActivity {
             }
             llContainer.addView(v);
         }
+    }
+
+    //保存历史记录
+    private void saveHistory(Poetry mPoemBean) {
+        PoetryHistory history = new PoetryHistory();
+        history.setP_id(mPoemBean.getObjectId());
+        history.setP_author(mPoemBean.getP_author());
+        history.setP_title(mPoemBean.getP_name());
+        history.setU_id(Config.getInstance().user.getObjectId());
+        history.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e == null){
+                    LogUtil.show("更新历史成功");
+                }else{
+                    LogUtil.show("更新历史失败");
+                    history.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+                                LogUtil.show("保存历史成功");
+                            }else{
+                                LogUtil.show("保存历史失败");
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }

@@ -8,9 +8,12 @@ import android.widget.TextView;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BasePageFragment;
+import com.roshine.poemlearn.beans.Config;
 import com.roshine.poemlearn.beans.PoemBean;
 import com.roshine.poemlearn.beans.PoemWordBean;
+import com.roshine.poemlearn.beans.PoetryHistory;
 import com.roshine.poemlearn.utils.DisplayUtil;
+import com.roshine.poemlearn.utils.LogUtil;
 import com.roshine.poemlearn.utils.StringUtils;
 import com.roshine.poemlearn.widgets.recyclerview.base.SimpleRecyclertViewAdater;
 import com.roshine.poemlearn.widgets.recyclerview.base.ViewHolder;
@@ -25,6 +28,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * @author Roshine
@@ -147,6 +153,35 @@ public class BlankFragement extends BasePageFragment {
         if (mBottomAdapter != null) {
             mBottomAdapter.notifyDataSetChanged();
         }
+    }
+
+    //保存历史记录
+    private void saveHistory(PoemBean mPoemBean) {
+        PoetryHistory history = new PoetryHistory();
+        history.setP_id(mPoemBean.getPoemId());
+        history.setP_author(mPoemBean.getPoemAuthor());
+        history.setP_title(mPoemBean.getPoemTitle());
+        history.setU_id(Config.getInstance().user.getObjectId());
+        history.update(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e == null){
+                    LogUtil.show("更新历史成功");
+                }else{
+                    LogUtil.show("更新历史失败");
+                    history.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+                                LogUtil.show("保存历史成功");
+                            }else{
+                                LogUtil.show("保存历史失败");
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void initTopRecycleView() {
@@ -343,6 +378,8 @@ public class BlankFragement extends BasePageFragment {
 
     @Override
     public void loadNetData() {
+        toast("保存记录");
+        saveHistory(mPoemBean);
     }
 
     @OnClick(R.id.tv_show_correct)

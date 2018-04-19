@@ -52,4 +52,8 @@
     <string name="beisong_tang">唐诗背诵</string>
     <string name="load_failed">加载数据失败</string>
     <string name="no_data">加载失败，没有数据</string>
+    <string name="learn_history">诗词学习记录</string>
+    <string name="poetry_detail">诗词详情</string>
+    <string name="history_text">学习记录</string>
+    <string name="search_text">搜索</string>
 </resources>

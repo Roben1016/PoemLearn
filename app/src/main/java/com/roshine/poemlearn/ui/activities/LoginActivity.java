@@ -1,7 +1,6 @@
 package com.roshine.poemlearn.ui.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,15 +10,10 @@ import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
 import com.roshine.poemlearn.beans.Config;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -32,16 +26,10 @@ import cn.bmob.v3.listener.SaveListener;
  * @desc
  */
 public class LoginActivity extends BaseToolBarActivity{
-    private static final int LOGIN_SUC = 200;
-    private static final int LOGIN_FAIL = 201;
     @BindView(R.id.et_user_name)
     EditText etUserName;
-    @BindView(R.id.til_user_name)
-    TextInputLayout tilUserName;
     @BindView(R.id.et_user_pwd)
     EditText etUserPwd;
-    @BindView(R.id.til_password)
-    TextInputLayout tilPassword;
     @BindView(R.id.btn_login)
     Button btnLogin;
     @BindView(R.id.btn_regist)

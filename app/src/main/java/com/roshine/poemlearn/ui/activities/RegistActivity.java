@@ -28,22 +28,14 @@ import cn.bmob.v3.listener.SaveListener;
  * @desc
  */
 public class RegistActivity extends BaseToolBarActivity{
-    private static final int REGIST_SUC = 100;
-    private static final int REGIST_FAIL = 101;
     @BindView(R.id.iv_back)
     ImageView ivBack;
     @BindView(R.id.et_user_name)
     EditText etUserName;
-    @BindView(R.id.til_user_name)
-    TextInputLayout tilUserName;
     @BindView(R.id.et_user_pwd)
     EditText etUserPwd;
-    @BindView(R.id.til_password)
-    TextInputLayout tilPassword;
     @BindView(R.id.et_user_pwd_second)
     EditText etUserPwdSecond;
-    @BindView(R.id.til_password_second)
-    TextInputLayout tilPasswordSecond;
     @BindView(R.id.btn_regist)
     Button btnRegist;
     @BindView(R.id.tv_title)

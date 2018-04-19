@@ -41,7 +41,7 @@
     </style>
 
     <style name="Label">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_width">match_parent</item>
@@ -49,12 +49,12 @@
     </style>
 
     <style name="Button">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">17sp</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:background">@drawable/btn_login_selector</item>
         <item name="android:onClick">onClick</item>
     </style>
 

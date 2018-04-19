@@ -49,8 +49,8 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
     private int poemType;
     private int schoolType;
     private LSAutoRecyclertView recyclertView;
-    private SimpleRecyclertViewAdater<PoemBean> mAdapter;
-    private List<PoemBean> listData = new ArrayList<>();
+    private SimpleRecyclertViewAdater<Poetry> mAdapter;
+    private List<Poetry> listData = new ArrayList<>();
     private int page;
     private int limitCount = 10;//10条数据
 
@@ -88,19 +88,19 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
         recyclertView = swipRecyclerView.getRecyclertView();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclertView.setLayoutManager(linearLayoutManager);
-        mAdapter = new SimpleRecyclertViewAdater<PoemBean>(this,listData,R.layout.item_poem) {
+        mAdapter = new SimpleRecyclertViewAdater<Poetry>(this,listData,R.layout.item_poem) {
             @Override
-            protected void onBindViewHolder(ViewHolder holder, int itemType, PoemBean itemBean, int position) {
+            protected void onBindViewHolder(ViewHolder holder, int itemType, Poetry itemBean, int position) {
                 TextView tvTitle = holder.getView(R.id.tv_poem_title);
                 TextView tvAuthor = holder.getView(R.id.tv_poem_author);
                 TextView tvYear = holder.getView(R.id.tv_poem_year);
                 TextView tvContent = holder.getView(R.id.tv_poem_content);
                 if (itemBean != null) {
-                    String correctPoem = itemBean.getCorrectPoem();
+                    String correctPoem = itemBean.getP_content();
                     String correctPoem2 = correctPoem.replaceAll("[。、？.?]", "\r\n");
-                    tvTitle.setText(itemBean.getPoemTitle());
-                    tvAuthor.setText(itemBean.getPoemAuthor());
-                    tvYear.setText(itemBean.getPoemYear());
+                    tvTitle.setText(itemBean.getP_name());
+                    tvAuthor.setText(itemBean.getP_author());
+                    tvYear.setText(itemBean.getP_source());
                     tvContent.setText(correctPoem2);
 
                 }
@@ -182,15 +182,7 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
         if(this.page == 0){
             listData.clear();
         }
-        for (int i = 0; i < list.size(); i++) {
-            Poetry poetry = list.get(i);
-            PoemBean poemBean = new PoemBean();
-            poemBean.setCorrectPoem(poetry.getP_content());
-            poemBean.setPoemYear(poetry.getP_source());
-            poemBean.setPoemTitle(poetry.getP_name());
-            poemBean.setPoemAuthor(poetry.getP_author());
-            listData.add(poemBean);
-        }
+        listData.addAll(list);
         reflashAdapter();
     }
 
@@ -223,6 +215,9 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
 
     @Override
     public void OnItemClick(int position, ViewHolder holder) {
-
+        Bundle bundle = new Bundle();
+        bundle.putString("p_id",listData.get(position).getObjectId());
+        bundle.putInt("from",1);
+        startActivity(PoetryDetailActivity.class, bundle);
     }
 }

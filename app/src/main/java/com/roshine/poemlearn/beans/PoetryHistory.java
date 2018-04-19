@@ -1,7 +1,5 @@
 package com.roshine.poemlearn.beans;
 
-import java.util.Date;
-
 import cn.bmob.v3.BmobObject;
 
 /**
@@ -14,68 +12,41 @@ import cn.bmob.v3.BmobObject;
  * @desc
  */
 public class PoetryHistory extends BmobObject {
-    private String poem_user;
-    private String poem_title;
-    private String poem_year;
-    private Date poem_last_time;
-    private String poem_author;
-    private String poem_content;
-    private Integer poem_id;
+    private String p_id;
+    private String u_id;
+    private String p_title;
+    private String p_author;
 
-    public String getPoem_user() {
-        return poem_user;
+    public String getP_id() {
+        return p_id;
     }
 
-    public void setPoem_user(String poem_user) {
-        this.poem_user = poem_user;
+    public void setP_id(String p_id) {
+        this.p_id = p_id;
     }
 
-    public String getPoem_title() {
-        return poem_title;
+    public String getU_id() {
+        return u_id;
     }
 
-    public void setPoem_title(String poem_title) {
-        this.poem_title = poem_title;
+    public void setU_id(String u_id) {
+        this.u_id = u_id;
     }
 
-    public String getPoem_year() {
-        return poem_year;
+    public String getP_title() {
+        return p_title;
     }
 
-    public void setPoem_year(String poem_year) {
-        this.poem_year = poem_year;
+    public void setP_title(String p_title) {
+        this.p_title = p_title;
     }
 
-    public Date getPoem_last_time() {
-        return poem_last_time;
+    public String getP_author() {
+        return p_author;
     }
 
-    public void setPoem_last_time(Date poem_last_time) {
-        this.poem_last_time = poem_last_time;
-    }
-
-    public String getPoem_author() {
-        return poem_author;
-    }
-
-    public void setPoem_author(String poem_author) {
-        this.poem_author = poem_author;
-    }
-
-    public String getPoem_content() {
-        return poem_content;
-    }
-
-    public void setPoem_content(String poem_content) {
-        this.poem_content = poem_content;
-    }
-
-    public Integer getPoem_id() {
-        return poem_id;
-    }
-
-    public void setPoem_id(Integer poem_id) {
-        this.poem_id = poem_id;
+    public void setP_author(String p_author) {
+        this.p_author = p_author;
     }
 
 }
