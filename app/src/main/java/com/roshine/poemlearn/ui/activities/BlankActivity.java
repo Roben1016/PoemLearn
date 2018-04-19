@@ -86,7 +86,7 @@ public class BlankActivity extends BaseToolBarActivity implements ViewPager.OnPa
         showProgress();
         if(poemType == 1){
             BmobQuery<Poetry> query=new BmobQuery<Poetry>();
-            query.addWhereEqualTo("p_type"," 宋词");
+            query.addWhereEqualTo("p_type","宋词");
             //设置查询的SQL语句
             query.findObjects(new FindListener<Poetry>() {
                 @Override
@@ -105,16 +105,16 @@ public class BlankActivity extends BaseToolBarActivity implements ViewPager.OnPa
                 }
             });
         }else{
-            String school = " 小学";
+            String school = "小学";
 
             if(schoolType == 1){//初中
-                school = " 初中";
+                school = "初中";
 //            initJuniorPoem();
             }else if(schoolType == 2){
-                school = " 高中";
+                school ="高中";
 //            initHighPoem();
             }else{
-                school = " 小学";
+                school = "小学";
 //            initPrimaryPoem();
             }
             BmobQuery<Poetry> query=new BmobQuery<Poetry>();

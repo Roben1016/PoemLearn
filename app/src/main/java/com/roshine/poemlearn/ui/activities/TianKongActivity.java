@@ -92,7 +92,7 @@ public class TianKongActivity extends BaseToolBarActivity {
         if(poemType == 1){//查询宋词100条数据
             BmobQuery<Poetry> query = new BmobQuery<Poetry>();
             //查询playerName叫“比目”的数据
-            query.addWhereEqualTo("p_type", " 宋词");
+            query.addWhereEqualTo("p_type", "宋词");
             //返回50条数据，如果不加上这条语句，默认返回10条数据
             query.setLimit(100);
             //执行查询方法
@@ -109,13 +109,13 @@ public class TianKongActivity extends BaseToolBarActivity {
                 }
             });
         }else{
-            String strQuery = " 小学";
+            String strQuery = "小学";
             if(schoolType == 1){
-                strQuery = " 初中";
+                strQuery = "初中";
             }else if(schoolType == 2){
-                strQuery = " 高中";
+                strQuery = "高中";
             }else{
-                strQuery = " 小学";
+                strQuery = "小学";
             }
             showProgress();
             BmobQuery<Poetry> query = new BmobQuery<Poetry>();

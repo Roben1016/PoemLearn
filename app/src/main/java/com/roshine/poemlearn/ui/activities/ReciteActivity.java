@@ -113,7 +113,7 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
     private void initData(int page) {
         if(poemType == 1){
             BmobQuery<Poetry> query=new BmobQuery<Poetry>();
-            query.addWhereEqualTo("p_type"," 宋词");
+            query.addWhereEqualTo("p_type","宋词");
             query.setLimit(limitCount);
             if (page != 0) {
                 query.setSkip(limitCount * page);
@@ -130,15 +130,15 @@ public class ReciteActivity extends BaseToolBarActivity implements OnRefreshList
                 }
             });
         }else{
-            String school = " 小学";
+            String school = "小学";
             if(schoolType == 1){//初中
-                school = " 初中";
+                school = "初中";
 //            initJuniorPoem();
             }else if(schoolType == 2){
-                school = " 高中";
+                school = "高中";
 //            initHighPoem();
             }else{
-                school = " 小学";
+                school = "小学";
 //            initPrimaryPoem();
             }
             BmobQuery<Poetry> query=new BmobQuery<Poetry>();

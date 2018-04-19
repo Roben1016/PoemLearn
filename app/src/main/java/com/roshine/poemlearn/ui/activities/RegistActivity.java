@@ -1,7 +1,6 @@
 package com.roshine.poemlearn.ui.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;

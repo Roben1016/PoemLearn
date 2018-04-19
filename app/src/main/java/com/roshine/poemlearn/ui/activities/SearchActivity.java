@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
 import com.roshine.poemlearn.beans.Poetry;
-import com.roshine.poemlearn.beans.PoetryHistory;
 import com.roshine.poemlearn.widgets.recyclerview.base.SimpleRecyclertViewAdater;
 import com.roshine.poemlearn.widgets.recyclerview.base.ViewHolder;
 import com.roshine.poemlearn.widgets.recyclerview.interfaces.OnItemClickListener;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
