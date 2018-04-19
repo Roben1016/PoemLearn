@@ -378,7 +378,6 @@ public class BlankFragement extends BasePageFragment {
 
     @Override
     public void loadNetData() {
-        toast("保存记录");
         saveHistory(mPoemBean);
     }
 
