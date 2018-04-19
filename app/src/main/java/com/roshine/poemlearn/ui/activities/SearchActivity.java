@@ -111,13 +111,11 @@ public class SearchActivity extends BaseToolBarActivity implements SearchView.On
                 if(e == null){
                     listData.clear();
                     if (list != null && list.size() > 0) {
-                        toast("搜索成功："+list.size());
                         listData.addAll(list);
                     }
                     reflashAdapter();
                 }else{
                     listData.clear();
-                    toast("搜索失败");
                     reflashAdapter();
                 }
             }
