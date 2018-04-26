@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference;
 
 /**
  *
- * @author Roshine
+ * @author L
  * @date 2018/4/14 20:55
  * @desc 封装自定义ProgressDialog
  *

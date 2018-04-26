@@ -8,12 +8,9 @@ import com.roshine.poemlearn.widgets.recyclerview.interfaces.OnItemLongClickList
 import java.util.List;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/15 10:27
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc
  */
 public abstract class SimpleRecyclertViewAdater<T> extends BaseRecyclertViewAdapter {

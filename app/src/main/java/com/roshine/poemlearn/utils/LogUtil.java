@@ -6,12 +6,9 @@ import com.roshine.poemlearn.BuildConfig;
 
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/14 20:41
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc log管理相关工具类
  */
 public class LogUtil {

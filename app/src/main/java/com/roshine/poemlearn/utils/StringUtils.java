@@ -14,12 +14,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/14 20:41
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc string相关管理工具类
  */
 public class StringUtils {

@@ -5,12 +5,9 @@ import android.widget.Toast;
 import com.roshine.poemlearn.App;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/14 20:43
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc toast工具类
  */
 public class ToastUtil {

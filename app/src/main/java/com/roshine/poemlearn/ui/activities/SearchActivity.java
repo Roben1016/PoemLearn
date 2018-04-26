@@ -25,12 +25,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/19 22:34
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc
  */
 public class SearchActivity extends BaseToolBarActivity implements SearchView.OnQueryTextListener, OnItemClickListener {

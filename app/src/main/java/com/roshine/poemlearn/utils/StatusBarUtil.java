@@ -14,12 +14,9 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2017/7/29 16:25
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc 设置沉浸式状态栏工具类
  */
 public class StatusBarUtil {

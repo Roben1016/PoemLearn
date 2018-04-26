@@ -9,12 +9,9 @@ import com.roshine.poemlearn.utils.StatusBarUtil;
 
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/14 20:56
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc 带toolbar的activity,设置沉浸式状态栏
  */
 public abstract class BaseToolBarActivity extends BaseActivity {

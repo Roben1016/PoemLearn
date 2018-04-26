@@ -30,6 +30,11 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "true"
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {

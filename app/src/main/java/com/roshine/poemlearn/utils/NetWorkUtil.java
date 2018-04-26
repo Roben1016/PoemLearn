@@ -16,7 +16,7 @@ import java.util.Enumeration;
 
  /**
   *
-  * @author Roshine
+  * @author L
   * @date 2018/4/14 20:43
   * @desc 网络判断工具类
   *

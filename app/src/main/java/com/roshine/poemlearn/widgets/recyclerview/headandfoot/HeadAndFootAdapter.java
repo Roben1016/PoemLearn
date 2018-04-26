@@ -14,12 +14,9 @@ import com.roshine.poemlearn.widgets.recyclerview.interfaces.OnItemLongClickList
 
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/15 10:31
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc 可添加头部和尾部的adapter
  */
 public class HeadAndFootAdapter<T extends RecyclerView.Adapter> extends RecyclerView.Adapter {

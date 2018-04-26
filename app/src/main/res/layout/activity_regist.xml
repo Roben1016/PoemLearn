@@ -22,6 +22,9 @@
             android:id="@+id/et_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
             android:hint="请输入用户名" />
 
         <TextView
@@ -33,6 +36,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入密码"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
             android:inputType="textPassword" />
 
         <TextView
@@ -44,6 +50,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请再次输入密码"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
             android:inputType="textPassword" />
 
         <Button

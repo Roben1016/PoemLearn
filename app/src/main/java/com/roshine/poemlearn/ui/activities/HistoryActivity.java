@@ -27,12 +27,9 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/19 21:15
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc 学习历史
  */
 public class HistoryActivity extends BaseToolBarActivity implements OnItemClickListener {

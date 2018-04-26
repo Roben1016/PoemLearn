@@ -18,12 +18,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/14 20:44
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc 所有activity通用基类
  */
 public abstract class BaseActivity extends AppCompatActivity implements BaseView{

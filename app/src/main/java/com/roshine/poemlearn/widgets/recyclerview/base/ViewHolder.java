@@ -20,12 +20,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 /**
- * @author Roshine
+ * @author L
  * @date 2018/4/15 10:27
- * @blog http://www.roshine.xyz
- * @email roshines1016@gmail.com
- * @github https://github.com/Roben1016
- * @phone 136****1535
+
  * @desc RecyclertView 的viewholder
  */
 public class ViewHolder extends RecyclerView.ViewHolder {
