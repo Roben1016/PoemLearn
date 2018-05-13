@@ -26,6 +26,16 @@
             android:src="@drawable/iv_back"
             android:scaleType="centerInside"
             android:visibility="gone" />
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_marginRight="15dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_title"

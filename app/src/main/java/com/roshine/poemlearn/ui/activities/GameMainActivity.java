@@ -1,10 +1,7 @@
 package com.roshine.poemlearn.ui.activities;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -12,8 +9,6 @@ import android.widget.RadioGroup;
 
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
-import com.roshine.poemlearn.utils.LogUtil;
-import com.roshine.poemlearn.utils.StringUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -21,7 +16,6 @@ import butterknife.OnClick;
 /**
  * @author L
  * @date 2018/4/14 23:11
-
  * @desc
  */
 public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.OnCheckedChangeListener {
@@ -42,6 +36,8 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
     RadioGroup rgGames;
     @BindView(R.id.iv_back)
     ImageView ivBack;
+    @BindView(R.id.iv_flying_orders)
+    ImageView ivFlyingOrders;
     private int poemType;//0是唐诗  1是宋词
     private int schoolType;//0小学  1初中 2高中
 
@@ -61,9 +57,9 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
         }
         setImages();
         rbPrimary.setChecked(true);
-        if(poemType == 1){//宋词没有初中高中之分
+        if (poemType == 1) {//宋词没有初中高中之分
             rgGames.setVisibility(View.GONE);
-        }else{
+        } else {
             rgGames.setVisibility(View.VISIBLE);
         }
         rgGames.setOnCheckedChangeListener(this);
@@ -90,24 +86,25 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
     @OnClick(R.id.iv_blank)
     void blankClick() {
         Bundle bundle = new Bundle();
-        bundle.putInt("poemType",poemType);
-        bundle.putInt("schoolType",schoolType);
-        startActivity(TianKongActivity.class,bundle);
+        bundle.putInt("poemType", poemType);
+        bundle.putInt("schoolType", schoolType);
+        startActivity(TianKongActivity.class, bundle);
     }
 
     @OnClick(R.id.iv_recite)
     void reciteClick() {
         Bundle bundle = new Bundle();
-        bundle.putInt("poemType",poemType);
-        bundle.putInt("schoolType",schoolType);
-        startActivity(ReciteActivity.class,bundle);
+        bundle.putInt("poemType", poemType);
+        bundle.putInt("schoolType", schoolType);
+        startActivity(ReciteActivity.class, bundle);
     }
+
     @OnClick(R.id.iv_poem_game)
     void poemGameClick() {
         Bundle bundle = new Bundle();
-        bundle.putInt("poemType",poemType);
-        bundle.putInt("schoolType",schoolType);
-        startActivity(BlankActivity.class,bundle);
+        bundle.putInt("poemType", poemType);
+        bundle.putInt("schoolType", schoolType);
+        startActivity(BlankActivity.class, bundle);
     }
 
     @Override
@@ -127,8 +124,15 @@ public class GameMainActivity extends BaseToolBarActivity implements RadioGroup.
                 break;
         }
     }
+
     @OnClick(R.id.iv_back)
-    void backClick(){
+    void backClick() {
         finish();
     }
+
+    @OnClick(R.id.iv_flying_orders)
+    void flyingOrderClick(){
+        startActivity(FlyingOrderKeyWordActivity.class);
+    }
+
 }

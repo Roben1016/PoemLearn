@@ -10,7 +10,7 @@
         android:layout_height="60dp"
         android:src="@drawable/tang_blank"
         android:layout_marginTop="100dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:layout_centerHorizontal="true"/>
     <ImageView
         android:id="@+id/iv_recite"
@@ -18,8 +18,8 @@
         android:layout_height="60dp"
         android:src="@drawable/tang_recite"
         android:layout_below="@+id/iv_blank"
-        android:layout_marginTop="50dp"
-        android:scaleType="centerCrop"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
         android:layout_centerHorizontal="true"/>
     <ImageView
         android:id="@+id/iv_poem_game"
@@ -27,8 +27,17 @@
         android:layout_height="60dp"
         android:src="@drawable/poem_game"
         android:layout_below="@+id/iv_recite"
-        android:layout_marginTop="50dp"
-        android:scaleType="centerCrop"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:layout_centerHorizontal="true"/>
+    <ImageView
+        android:id="@+id/iv_flying_orders"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:src="@drawable/flying_order"
+        android:layout_below="@+id/iv_poem_game"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
         android:layout_centerHorizontal="true"/>
 
     <RadioGroup

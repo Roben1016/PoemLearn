@@ -38,6 +38,12 @@
             android:singleLine="true"
             android:imeOptions="actionDone"
             android:inputType="textPassword"/>
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_remember"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remember_password"
+            android:layout_marginTop="10dp"/>
         <Button
             android:id="@+id/btn_login"
             android:text="@string/login"
