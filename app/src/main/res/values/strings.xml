@@ -83,10 +83,17 @@
     <string name="null_poetry">——数据库中未查询到该数据</string>
     <string name="flying_order_success">匹配成功</string>
     <string name="flying_order_success_half">匹配不完整</string>
-    <string name="flying_order_no_match">不匹配</string>
+    <string name="flying_order_no_match">诗句不匹配</string>
     <string name="flying_order_no_poetry">未查询到该诗句</string>
-    <string name="flying_order_reinput">重复诗句</string>
+    <string name="flying_order_reinput">已重复</string>
     <string name="vs">VS</string>
+    <string name="chongfu_text">——已重复</string>
+    <string name="get_no_poetry">未获取到诗句内容</string>
+    <string name="text_begin">请开始说话…</string>
+    <string name="no_match_data">该令牌诗词已全部查询完成。</string>
+    <string name="get_no_datas">未获取到数据</string>
+    <string name="get_data_failed">获取数据失败</string>
+    <string name="loading_data">正在加载数据，请稍候再试</string>
 
 
     <!--讯飞语音可配置参数-->

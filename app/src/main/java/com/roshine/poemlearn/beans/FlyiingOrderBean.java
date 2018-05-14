@@ -1,10 +1,12 @@
 package com.roshine.poemlearn.beans;
 
+import java.io.Serializable;
+
 /**
  * @author L
  * @desc 飞花令游戏中数据bean
  */
-public class FlyiingOrderBean {
+public class FlyiingOrderBean implements Serializable{
     private int userType;//用户类型， 0 用户； 1 机器
     private Poetry poetry;
     private String content;//内容

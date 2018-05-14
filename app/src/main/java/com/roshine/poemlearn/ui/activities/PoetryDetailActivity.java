@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.iflytek.cloud.ErrorCode;
@@ -16,6 +17,7 @@ import com.iflytek.cloud.SynthesizerListener;
 import com.roshine.poemlearn.R;
 import com.roshine.poemlearn.base.BaseToolBarActivity;
 import com.roshine.poemlearn.beans.Config;
+import com.roshine.poemlearn.beans.FlyiingOrderBean;
 import com.roshine.poemlearn.beans.Poetry;
 import com.roshine.poemlearn.beans.PoetryHistory;
 import com.roshine.poemlearn.utils.LogUtil;
@@ -32,7 +34,6 @@ import cn.bmob.v3.listener.UpdateListener;
 /**
  * @author L
  * @date 2018/4/19 21:30
-
  * @desc 诗词详情
  */
 public class PoetryDetailActivity extends BaseToolBarActivity {
@@ -54,8 +55,16 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
     ImageView ivPlay;
     @BindView(R.id.iv_title_right)
     ImageView ivSetting;
+    @BindView(R.id.rl_details)
+    RelativeLayout rlDetails;
+    @BindView(R.id.tv_error_title)
+    TextView tvErrorTitle;
+    @BindView(R.id.tv_error_content)
+    TextView tvErrorContent;
+    @BindView(R.id.rl_error_poetry)
+    RelativeLayout rlErrorPoetry;
     private String p_id;
-    private int from;//0是从历史记录过来， 1是从诗词背诵列表进来  2是从搜索进来
+    private int from;//0是从历史记录过来， 1是从诗词背诵列表进来  2是从搜索进来   3 从飞花令列表进入
     private SpeechSynthesizer mTts;
     // 缓冲进度
     private int mPercentForBuffering = 0;
@@ -79,6 +88,21 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
             if (extras != null) {
                 p_id = extras.getString("p_id");
                 from = extras.getInt("from");
+                FlyiingOrderBean poety = (FlyiingOrderBean) extras.getSerializable("poety");
+                if (from == 3) {
+                    if (poety != null) {
+                        Poetry poetry = poety.getPoetry();
+                        if (poetry != null) {
+                            loadSuc(poetry);
+                        }else {
+                            initErrorView(poety);
+                        }
+                    }else{
+                        initErrorView(poety);
+                    }
+                } else {
+                    initData();
+                }
             }
         }
         ivBack.setVisibility(View.VISIBLE);
@@ -86,8 +110,14 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
         ivSetting.setVisibility(View.VISIBLE);
         ivSetting.setImageDrawable(getResources().getDrawable(R.drawable.iv_setting));
         mPersonValues = getResources().getStringArray(R.array.voicer_cloud_entries);
-        initData();
         initXunfei();
+    }
+
+    private void initErrorView(FlyiingOrderBean poety) {
+        rlDetails.setVisibility(View.GONE);
+        rlErrorPoetry.setVisibility(View.VISIBLE);
+        tvErrorTitle.setText(getResources().getString(R.string.flying_order_no_poetry));
+        tvErrorContent.setText(poety == null?getResources().getString(R.string.get_no_poetry):poety.getContent());
     }
 
     private void initXunfei() {
@@ -102,9 +132,9 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
         poetryBmobQuery.getObject(p_id, new QueryListener<Poetry>() {
             @Override
             public void done(Poetry poetry, BmobException e) {
-                if(e == null){
+                if (e == null) {
                     loadSuc(poetry);
-                }else{
+                } else {
                     loadFailed(getResources().getString(R.string.load_failed));
                 }
             }
@@ -119,12 +149,14 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
     private void loadSuc(Poetry poetry) {
         hideProgress();
         initViews(poetry);
-        if(from != 0){
+        if (from != 0) {
             saveHistory(poetry);
         }
     }
 
     private void initViews(Poetry poetry) {
+        rlErrorPoetry.setVisibility(View.GONE);
+        rlDetails.setVisibility(View.VISIBLE);
         StringBuffer stringBuffer = new StringBuffer();
         String pTitle = poetry.getP_name();
         String pAuthor = poetry.getP_author();
@@ -148,14 +180,15 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
     void backClick() {
         finish();
     }
+
     @OnClick(R.id.iv_title_right)
     void settingClick() {
         startActivity(PlaySettingActivity.class);
     }
 
     @OnClick(R.id.tv_play)
-    void playClick(){
-        if( null == mTts ){
+    void playClick() {
+        if (null == mTts) {
             // 创建单例失败，与 21001 错误为同样原因，参考 http://bbs.xfyun.cn/forum.php?mod=viewthread&tid=9688
             this.showTip(getResources().getString(R.string.init_xunfei_fail));
             return;
@@ -163,7 +196,7 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
 
         switch (playStatus) {
             case 0://第一次进入时的默认状态
-                if(StringUtils.isEmpty(currentText)){
+                if (StringUtils.isEmpty(currentText)) {
                     toast(getResources().getString(R.string.data_init_no));
                     return;
                 }
@@ -180,7 +213,7 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
                 if (code != ErrorCode.SUCCESS) {
                     showTip(getResources().getString(R.string.init_xunfei_fail3));
                 }
-        	    break;
+                break;
             case 1://播放状态
                 mTts.pauseSpeaking();
                 break;
@@ -188,7 +221,7 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
                 mTts.resumeSpeaking();
                 break;
             default:
-        	    break;
+                break;
         }
     }
 
@@ -196,7 +229,7 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
     private void setParam() {
         mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
         // 设置在线合成发音人,可在values/string.xml中选择合适的人的声音
-        mTts.setParameter(SpeechConstant.VOICE_NAME, mPersonValues[Integer.valueOf(mSharedPreferences.getString("person_preference","0"))]);
+        mTts.setParameter(SpeechConstant.VOICE_NAME, mPersonValues[Integer.valueOf(mSharedPreferences.getString("person_preference", "0"))]);
         //设置合成语速,可设置(0-100)
         mTts.setParameter(SpeechConstant.SPEED, mSharedPreferences.getString("speed_preference", "50"));
         //设置合成音调,可设置(0-100)
@@ -217,16 +250,16 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
         history.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
-                if(e == null){
+                if (e == null) {
                     LogUtil.show("更新历史成功");
-                }else{
+                } else {
                     LogUtil.show("更新历史失败");
                     history.save(new SaveListener<String>() {
                         @Override
                         public void done(String s, BmobException e) {
                             if (e == null) {
                                 LogUtil.show("保存历史成功");
-                            }else{
+                            } else {
                                 LogUtil.show("保存历史失败");
                             }
                         }
@@ -245,7 +278,7 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
             LogUtil.show("InitListener init() code = " + code);
             if (code != ErrorCode.SUCCESS) {
                 toast(getResources().getString(R.string.init_xunfei_fail2));
-                LogUtil.show("初始化语音失败，code："+code);
+                LogUtil.show("初始化语音失败，code：" + code);
             } else {
                 // 初始化成功，之后可以调用startSpeaking方法
                 // 注：有的开发者在onCreate方法中创建完合成对象之后马上就调用startSpeaking进行合成，
@@ -330,10 +363,11 @@ public class PoetryDetailActivity extends BaseToolBarActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if( null != mTts ){
+        if (null != mTts) {
             mTts.stopSpeaking();
             // 退出时释放连接
             mTts.destroy();
         }
     }
+
 }

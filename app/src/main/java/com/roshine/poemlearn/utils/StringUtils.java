@@ -571,4 +571,11 @@ public class StringUtils {
         return sb.toString().equals("")?example:sb.toString();
     }
 
+    public static String replaceBiaodian(String beforeStr,String replaced){
+        if (beforeStr != null && replaced != null) {
+            return beforeStr.replaceAll("[\\p{P}+~$`^=|<>～｀＄＾＋＝｜＜＞￥× ]",replaced);
+        }
+        return null;
+    }
+
 }

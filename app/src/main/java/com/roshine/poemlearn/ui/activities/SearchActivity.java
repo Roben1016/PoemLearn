@@ -94,12 +94,12 @@ public class SearchActivity extends BaseToolBarActivity implements SearchView.On
         eq1.addWhereContains("p_name", newText);
         BmobQuery<Poetry> eq2 = new BmobQuery<Poetry>();
         eq2.addWhereContains("p_author", newText);
-//        BmobQuery<Poetry> eq3 = new BmobQuery<Poetry>();//暂时不差内容
-//        eq3.addWhereContains("p_content", newText);
+        BmobQuery<Poetry> eq3 = new BmobQuery<Poetry>();//暂时不查内容
+        eq3.addWhereContains("p_content", newText);
         List<BmobQuery<Poetry>> queries = new ArrayList<BmobQuery<Poetry>>();
         queries.add(eq1);
         queries.add(eq2);
-//        queries.add(eq3);
+        queries.add(eq3);
         BmobQuery<Poetry> mainQuery = new BmobQuery<Poetry>();
         mainQuery.or(queries);
         mainQuery.findObjects(new FindListener<Poetry>() {

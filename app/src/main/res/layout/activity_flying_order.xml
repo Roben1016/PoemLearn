@@ -26,8 +26,8 @@
             android:layout_height="35dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/iv_play"
-            android:visibility="gone"
+            android:src="@drawable/iv_record"
+            android:visibility="visible"
             android:layout_centerVertical="true"/>
         <EditText
             android:id="@+id/et_input_poetry"

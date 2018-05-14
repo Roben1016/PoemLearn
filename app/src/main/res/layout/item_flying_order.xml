@@ -35,6 +35,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textSize="15sp"
+        android:gravity="center_horizontal"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"/>
     <TextView
