@@ -311,6 +311,7 @@ public class FlyingOrderActivity extends BaseToolBarActivity {
                 bean.setPoetry(null);
                 bean.setContent(content);
                 bean.setStatus(currentStatus);
+                listData.add(bean);
                 reflashAdapter(listData.size());
                 return;
             }
